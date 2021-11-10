@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>PlantUML Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- bootstrap, jquery -->
+        <link rel="stylesheet" href="webjars/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+        <script src="webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!-- code mirror -->
+        <link rel="stylesheet" href="webjars/codemirror/3.21/lib/codemirror.css" />
+        <script src="webjars/codemirror/3.21/lib/codemirror.js"></script>
+        <!-- app resources -->
+        <script src="resources/js/simplejs/encode64.js"></script>
+        <script src="resources/js/zlib/rawdeflate.js"></script>
+        <script src="resources/js/zlib/rawinflate.js"></script>
+
+        <script>
+            var myCodeMirror;
+            $(document).ready(function () {
+                // setup code mirror
+                myCodeMirror = CodeMirror.fromTextArea(
+                        document.getElementById("pumltext"),
+                        {
+                            lineNumbers: true
+                        }
+                );
+            });
+        </script>
+
+        <script>
+            /*
+             * Paste text from a snippet to the puml-text element.
+             * @type Function
+             */
+            var pasteSnippet = (function () {
+                return function pasteSnipptet(jqSnippetElement) {
+                    const srcText = jqSnippetElement.text();
+                    //const pumltextElement = $('#pumltext');
+                    //pumltextElement.val(srcText);
+                    myCodeMirror.setValue(srcText);
+                };
+            })();
+
+            var encodePumltextResource = (function () {})();
+
+            var encodePumltextJs = (function () {
+                var umlDefault = "@startuml\n"
+                        + "Alice -> Bob : Hello\n"
+                        + "@enduml";
+                function compressAndEncode(s) {
+                    //UTF8
+                    var sAsUnescaped = unescape(encodeURIComponent(s));
+                    var sEncoded = encode64(deflate(sAsUnescaped, 9));
+                    return sEncoded;
+                }
+
+                return function () {
+                    // save codeMirror-text in textArea
+                    myCodeMirror.save();
+                    const pumltextElement = $('#pumltext');
+                    var pumltext = pumltextElement.val();
+                    var pumltextEncoded = compressAndEncode(pumltext);
+
+                    alert("encoded " + pumltextEncoded);
+
+                    const spanEncodedElement = $('#spanEncoded');
+                    spanEncodedElement.text(pumltextEncoded);
+
+                    const ahrefpngElement = $('#ahrefpng');
+                    ahrefpngElement.attr('href', 'webresources/generateImage/png/encoded?text=' + pumltextEncoded);
+                    ahrefpngElement.removeClass('disabled');
+
+                    const ahrefsvg = $('#ahrefsvg');
+                    ahrefsvg.attr('href', 'webresources/generateImage/svg/encoded?text=' + pumltextEncoded);
+                    ahrefsvg.removeClass('disabled');
+                };
+            })();
+
+            /*
+             * generate image from puml-text
+             * @type Function
+             */
+            var generateImageResource = (function () {
+                //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
+                const generateImageResourceUrl = 'webresources/generateImage/png/decoded';
+                //const url = baseUrl + generateImageResourceUrl;
+                const url = generateImageResourceUrl;
+                return function generateImageResource() {
+                    // save codeMirror-text in textArea
+                    myCodeMirror.save();
+
+                    const pumltextElement = $('#pumltext');
+                    const imgdiagramElement = $('#imgdiagram');
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        contentType: 'text/plain; charset=UTF-8',
+                        data: pumltextElement.val(),
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        success(data) {
+                            //console.log(data);
+                            const url = window.URL || window.webkitURL;
+                            const src = url.createObjectURL(data);
+                            imgdiagramElement.attr('src', src);
+                        }
+                    });
+                };
+            })();
+
+        </script>
+    </head>
+    <body>
+        <!--div class="jumbotron text-center">
+            <h1>Bootstrap 1</h1>
+            <p>Lorem ipsum dolor sit amet.</p>
+        </div-->
+        <script>
+            var processSnippets = (function () {
+                const snippets = [
+                    {
+                        "id": "snippet_sequence_1",
+                        "text": "@startuml \n\
+title Sequence Snippet 1\n\
+Bob -> Alice : hello Alice \n\
+Alice -> Bob : hello Bob \n\
+@enduml",
+                    },
+                    {
+                        "id": "snippet_class_1",
+                        "text": "@startuml \n\
+title Class Snippet 1 \n\
+class A \n\
+class B \n\
+A -> B \n\
+@enduml",
+                    }
+                ];
+                return function processSnippets() {
+                    const idSnippetPanelElement = $('#idSnippetPanel');
+                    for (var i = 0; i < snippets.length; i++) {
+                        const snippet = snippets[i];
+
+                        idSnippetPanelElement.append(
+                                "<div class=\"panel-body\">"
+                                + "<span class=\"glyphicon glyphicon-copy\" aria-hidden=\"true\" "
+                                + " onclick=\"pasteSnippet($('#" + snippet.id + "'));\""
+                                + ">"
+                                + "</span>"
+                                + "<pre id=\"" + snippet.id + "\">"
+                                + snippet.text
+                                + "</pre>"
+                                + "</div>"
+                                );
+                    }
+                };
+            })();
+        </script>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Row1 Column 1-12</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                    <p>
+                        <button class="btn btn-primary"
+                                onclick="processSnippets()">Load Snippets</button>
+                    </p>
+                    <div id="idSnippetPanel" class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Snippets</h3>
+                        </div>
+                        <!--
+                        <div class="panel-body">
+
+                            <span class="glyphicon glyphicon-copy" aria-hidden="true"
+                                  onclick="pasteSnippet($('#snippet1'));"
+                                  ></span>
+                            <pre id="snippet1">@startuml
+Bob -> Alice : hello Alice
+Alice -> Bob : hello Bob
+@enduml</pre>
+                        </div>
+                        <div class="panel-body">
+                            <span class="glyphicon glyphicon-copy" aria-hidden="true"
+                                  onclick="pasteSnippet($('#snippet2'));"
+                                  ></span>
+                            <pre id="snippet2">@startuml
+class A
+class B
+A -> B
+@enduml</pre>
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <h3>Row2 Column 1-12</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <h3>PlantUml Text</h3>
+                    <form method="post" accept-charset="UTF-8" >
+                        <div class="form-group">
+                            <label id="umltextLabel" for="umltext">UML</label>
+                            <textarea id="pumltext" name="text" class="form-control"
+                                      autofocus="true"
+                                      cols="80"
+                                      rows="20"></textarea>
+                        </div>
+                    </form>
+                    <button id="umltextSubmit"
+                            type="button"
+                            onclick="generateImageResource();"
+                            class="btn btn-primary">Generate Image</button>
+                    <button id="umltextEncode"
+                            type="button"
+                            onclick="encodePumltextJs();"
+                            class="btn btn-primary">Encode UML</button>
+
+                    <h3>PlantUML Diagram</h3>
+                    <div id="diagram" class="thumbnail">
+                        <img id="imgdiagram" src="" alt="PlantUML diagram..." >
+                        <div class="caption">
+                            <p>Encoded diagram : <span id="spanEncoded"></span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Image permalinks</p>
+                        <div class="list-group">
+                            <a id="ahrefpng" class="list-group-item disabled" href="#">PNG Image</a>
+                            <a id="ahrefsvg" class="list-group-item disabled" href="#">SVG Image</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>
