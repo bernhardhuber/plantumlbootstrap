@@ -15,6 +15,7 @@ import org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncoderDecoder;
 import org.huberb.wildfly.bootstrap1.plantuml.support.PumlDefaultEncodedDecoded;
 
 /**
+ * Generate an image from encoded or decoded uml text.
  *
  * @author berni3
  */
@@ -37,20 +38,20 @@ public class GenerateImage {
      * Generate image and send image as http-response.
      *
      * @param fileFormat specifies the response format like PNG, SVG, etc.
-     * @param optDecoded plantuml decoded (plain) text
+     * @param decodedUmlText plantuml decoded (plain) text
      * @param req
      * @param resp
      */
     public void generateImgageFromDecodedAndSend(FileFormat fileFormat,
-            String optDecoded,
+            String decodedUmlText,
             HttpServletRequest req, HttpServletResponse resp) {
 
         //---
         // extract encoded or decoded uml text
         final String decoded;
         {
-            if (StringUtility.isStringNotEmpty(optDecoded)) {
-                decoded = optDecoded;
+            if (StringUtility.isStringNotEmpty(decodedUmlText)) {
+                decoded = decodedUmlText;
             } else {
                 final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
                 decoded = umlDefault;
@@ -64,20 +65,20 @@ public class GenerateImage {
      * Generate image and send image as http-response.
      *
      * @param fileFormat specifies the response format like PNG, SVG, etc.
-     * @param optEncoded plantuml encoded text
+     * @param encodedUmlText plantuml encoded text
      * @param req
      * @param resp
      */
     public void generateImageFromEncodedAndSend(FileFormat fileFormat,
-            String optEncoded,
+            String encodedUmlText,
             HttpServletRequest req, HttpServletResponse resp) {
 
         //---
         // extract encoded or decoded uml text
         final String decoded;
         {
-            if (StringUtility.isStringNotEmpty(optEncoded)) {
-                decoded = this.encoderDecoder.decode(optEncoded);
+            if (StringUtility.isStringNotEmpty(encodedUmlText)) {
+                decoded = this.encoderDecoder.decode(encodedUmlText);
             } else {
                 final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
                 decoded = umlDefault;
@@ -92,18 +93,18 @@ public class GenerateImage {
      *
      * @param request
      * @param response
-     * @param uml plain plantuml text
+     * @param decodedUmlText plain plantuml text
      * @param idx
      * @param fileFormat specifies the response format like PNG, SVG, etc.
      */
     void generateImageAndSend(HttpServletRequest request,
             HttpServletResponse response,
-            String uml,
+            String decodedUmlText,
             int idx,
             FileFormat fileFormat) {
         try {
             final PublicDiagramResponse diagramResponse = new PublicDiagramResponse(request, response, fileFormat);
-            diagramResponse.sendDiagram(uml, idx);
+            diagramResponse.sendDiagram(decodedUmlText, idx);
         } catch (IOException ioex) {
             throw new GenerateImageRuntimeException("generateAndSendImage", ioex);
         }

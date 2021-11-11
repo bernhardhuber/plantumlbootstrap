@@ -20,6 +20,8 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
+ * Need this class as SerlvetOuputStream implementation references resource
+ * bundle javax.servlet.LoclaStrings.
  *
  * @author berni3
  */

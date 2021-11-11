@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
 
 /**
+ * Define an API Wrapper for {@link DiagramResponse}.
  *
  * @author berni3
  */

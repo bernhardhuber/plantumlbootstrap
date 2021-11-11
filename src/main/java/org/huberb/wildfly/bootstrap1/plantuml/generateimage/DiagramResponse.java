@@ -54,14 +54,14 @@ import net.sourceforge.plantuml.version.Version;
 class DiagramResponse {
 
     private static final String POWERED_BY = "PlantUML Version " + Version.versionString();
-
-    private final HttpServletResponse response;
-    private final FileFormat format;
-    private final HttpServletRequest request;
     private static final Map<FileFormat, String> CONTENT_TYPE;
 
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
+    private final FileFormat format;
+
     static {
-        Map<FileFormat, String> map = new HashMap<FileFormat, String>();
+        final Map<FileFormat, String> map = new HashMap<FileFormat, String>();
         map.put(FileFormat.PNG, "image/png");
         map.put(FileFormat.SVG, "image/svg+xml");
         map.put(FileFormat.EPS, "application/postscript");

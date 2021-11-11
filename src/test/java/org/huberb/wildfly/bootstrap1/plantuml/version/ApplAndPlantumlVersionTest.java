@@ -27,14 +27,6 @@ public class ApplAndPlantumlVersionTest {
     public ApplAndPlantumlVersionTest() {
     }
 
-    /*
-org.opentest4j.AssertionFailedError: expected: <> but was: 
-	at org.huberb.wildfly.bootstrap1.plantuml.version.ApplAndPlantumlVersionTest.testRetrievePlantumlFullDescription(ApplAndPlantumlVersionTest.java:51)
-
-testRetrieveProjectFullDescription  Time elapsed: 0 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <> but was: <-unknown->
-
-     */
     /**
      * Test of retrieveProjectFullDescription method, of class
      * ApplAndPlantumlVersion.
