@@ -77,10 +77,10 @@ class DiagramResponse {
         }
     }
 
-    DiagramResponse(HttpServletResponse r, FileFormat f, HttpServletRequest rq) {
-        response = r;
-        format = f;
-        request = rq;
+    DiagramResponse(HttpServletRequest request, HttpServletResponse response, FileFormat fileFormat) {
+        this.response = response;
+        this.format = fileFormat;
+        this.request = request;
     }
 
     /**

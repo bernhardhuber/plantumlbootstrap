@@ -16,8 +16,8 @@ import net.sourceforge.plantuml.FileFormat;
  */
 public class PublicDiagramResponse extends DiagramResponse {
 
-    public PublicDiagramResponse(HttpServletResponse r, FileFormat f, HttpServletRequest rq) {
-        super(r, f, rq);
+    public PublicDiagramResponse(HttpServletRequest request, HttpServletResponse response, FileFormat fileFormat) {
+        super(request, response, fileFormat);
     }
 
     @Override

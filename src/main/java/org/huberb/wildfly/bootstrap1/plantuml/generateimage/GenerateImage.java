@@ -94,15 +94,15 @@ public class GenerateImage {
      * @param response
      * @param uml plain plantuml text
      * @param idx
-     * @param ff specifies the response format like PNG, SVG, etc.
+     * @param fileFormat specifies the response format like PNG, SVG, etc.
      */
     void generateImageAndSend(HttpServletRequest request,
             HttpServletResponse response,
             String uml,
             int idx,
-            FileFormat ff) {
+            FileFormat fileFormat) {
         try {
-            final PublicDiagramResponse diagramResponse = new PublicDiagramResponse(response, ff, request);
+            final PublicDiagramResponse diagramResponse = new PublicDiagramResponse(request, response, fileFormat);
             diagramResponse.sendDiagram(uml, idx);
         } catch (IOException ioex) {
             throw new GenerateImageRuntimeException("generateAndSendImage", ioex);

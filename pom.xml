@@ -114,6 +114,7 @@
                 <version>2.22.2</version>
                 <configuration>
                     <!--skipTests>false</skipTests-->
+                    <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
             <!--plugin>
