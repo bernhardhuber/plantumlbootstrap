@@ -43,7 +43,9 @@
                 };
             })();
 
-            var encodePumltextResource = (function () {})();
+            var encodePumltextResource = (function () {
+                
+            })();
 
             var encodePumltextJs = (function () {
                 var umlDefault = "@startuml\n"
@@ -63,7 +65,8 @@
                     var pumltext = pumltextElement.val();
                     var pumltextEncoded = compressAndEncode(pumltext);
 
-                    alert("encoded " + pumltextEncoded);
+                    //alert("encoded " + pumltextEncoded);
+                    //console.log('encodePumltextJs '+data);
 
                     const spanEncodedElement = $('#spanEncoded');
                     spanEncodedElement.text(pumltextEncoded);
@@ -85,7 +88,6 @@
             var generateImageResource = (function () {
                 //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
                 const generateImageResourceUrl = 'webresources/generateImage/png/decoded';
-                //const url = baseUrl + generateImageResourceUrl;
                 const url = generateImageResourceUrl;
                 return function generateImageResource() {
                     // save codeMirror-text in textArea
@@ -106,6 +108,27 @@
                             const url = window.URL || window.webkitURL;
                             const src = url.createObjectURL(data);
                             imgdiagramElement.attr('src', src);
+                        }
+                    });
+                };
+            })();
+
+            /*
+             * fetch version info
+             * @type Function
+             */
+            var fetchVersionInfo = (function () {
+                //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
+                const generateImageResourceUrl = 'webresources/applAndPlantumlVersion/applAndPlantumlVersion';
+                const url = generateImageResourceUrl;
+                return function fetchVersionInfo() {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        dataType: 'text',
+                        success(data) {
+                            //console.log('fetchVersionInfo ' + data);
+                            alert('' + data);
                         }
                     });
                 };
@@ -211,15 +234,20 @@ A -> B
                                       rows="20"></textarea>
                         </div>
                     </form>
-                    <button id="umltextSubmit"
-                            type="button"
-                            onclick="generateImageResource();"
-                            class="btn btn-primary">Generate Image</button>
-                    <button id="umltextEncode"
-                            type="button"
-                            onclick="encodePumltextJs();"
-                            class="btn btn-primary">Encode UML</button>
-
+                    <div class="btn-group">
+                        <button id="umltextSubmit"
+                                type="button"
+                                onclick="generateImageResource();"
+                                class="btn btn-primary">Generate Image</button>
+                        <button id="umltextEncode"
+                                type="button"
+                                onclick="encodePumltextJs();"
+                                class="btn btn-primary">Encode UML</button>
+                        <button id="fetchVersionInfo"
+                                type="button"
+                                onclick="fetchVersionInfo();"
+                                class="btn btn-primary">Fetch Version Info</button>
+                    </div>
                     <h3>PlantUML Diagram</h3>
                     <div id="diagram" class="thumbnail">
                         <img id="imgdiagram" src="" alt="PlantUML diagram..." >
