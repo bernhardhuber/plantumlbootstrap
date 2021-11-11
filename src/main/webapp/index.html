@@ -36,7 +36,7 @@
              * @type Function
              */
             var pasteSnippet = (function () {
-                return function pasteSnipptet(jqSnippetElement) {
+                return function pasteSnippet(jqSnippetElement) {
                     const srcText = jqSnippetElement.text();
                     //const pumltextElement = $('#pumltext');
                     //pumltextElement.val(srcText);
@@ -44,14 +44,65 @@
                 };
             })();
 
+            var publishEncodedPumltext = (function () {
+                return function publishEncodedPumltext(pumltextEncoded) {
+                    const spanEncodedElement = $('#spanEncoded');
+                    spanEncodedElement.text(pumltextEncoded);
+
+                    const ahrefpngElement = $('#ahrefpng');
+                    ahrefpngElement.attr('href', 'webresources/generateImage/png/encoded?text=' + pumltextEncoded);
+                    ahrefpngElement.removeClass('disabled');
+
+                    const ahrefsvg = $('#ahrefsvg');
+                    ahrefsvg.attr('href', 'webresources/generateImage/svg/encoded?text=' + pumltextEncoded);
+                    ahrefsvg.removeClass('disabled');
+                }
+            })();
+
+            var decodePumltextResource = (function () {
+                //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
+                const url = 'webresources/encoderDecoder/decode';
+                return function decodePumltextResource(encodedPumltext) {
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: encodedPumltext,
+                        dataType: 'json',
+                        success(data) {
+                            //console.log('fetchVersionInfo ' + data);
+                            alert('' + JSON.stringify(data));
+                            const  pumltextDecoded = data.decoded;
+                            const pumltextEncoded = data.encoded;
+                        }
+                    });
+                };
+            })();
+
             var encodePumltextResource = (function () {
-                
+                //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
+                const url = 'webresources/encoderDecoder/encode';
+                return function encodePumltextResource() {
+                    // save codeMirror-text in textArea
+                    myCodeMirror.save();
+                    const pumltextElement = $('#pumltext');
+                    var pumltextDecoded = pumltextElement.val();
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: pumltextDecoded,
+                        dataType: 'json',
+                        success(data) {
+                            //console.log('fetchVersionInfo ' + data);
+                            //alert('' + JSON.stringify(data));
+                            const  pumltextDecoded = data.decoded;
+                            const pumltextEncoded = data.encoded;
+                            publishEncodedPumltext(pumltextEncoded);
+                        }
+                    });
+                };
             })();
 
             var encodePumltextJs = (function () {
-                var umlDefault = "@startuml\n"
-                        + "Alice -> Bob : Hello\n"
-                        + "@enduml";
                 function compressAndEncode(s) {
                     //UTF8
                     var sAsUnescaped = unescape(encodeURIComponent(s));
@@ -65,20 +116,9 @@
                     const pumltextElement = $('#pumltext');
                     var pumltext = pumltextElement.val();
                     var pumltextEncoded = compressAndEncode(pumltext);
-
                     //alert("encoded " + pumltextEncoded);
                     //console.log('encodePumltextJs '+data);
-
-                    const spanEncodedElement = $('#spanEncoded');
-                    spanEncodedElement.text(pumltextEncoded);
-
-                    const ahrefpngElement = $('#ahrefpng');
-                    ahrefpngElement.attr('href', 'webresources/generateImage/png/encoded?text=' + pumltextEncoded);
-                    ahrefpngElement.removeClass('disabled');
-
-                    const ahrefsvg = $('#ahrefsvg');
-                    ahrefsvg.attr('href', 'webresources/generateImage/svg/encoded?text=' + pumltextEncoded);
-                    ahrefsvg.removeClass('disabled');
+                    publishEncodedPumltext(pumltextEncoded);
                 };
             })();
 
@@ -88,8 +128,7 @@
              */
             var generateImageResource = (function () {
                 //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
-                const generateImageResourceUrl = 'webresources/generateImage/png/decoded';
-                const url = generateImageResourceUrl;
+                const url = 'webresources/generateImage/png/decoded';
                 return function generateImageResource() {
                     // save codeMirror-text in textArea
                     myCodeMirror.save();
@@ -215,15 +254,19 @@ A -> B
                         </div>
                     </form>
                     <div class="btn-group">
-                        <button id="umltextSubmit"
+                        <button id="generateImageResourceId"
                                 type="button"
                                 onclick="generateImageResource();"
                                 class="btn btn-primary">Generate Image</button>
-                        <button id="umltextEncode"
+                        <button id="encodePumltextJsId"
                                 type="button"
                                 onclick="encodePumltextJs();"
-                                class="btn btn-primary">Encode UML</button>
-                        <button id="fetchVersionInfo"
+                                class="btn btn-primary">Encode UML JS</button>
+                        <button id="encodePumltextResourceId"
+                                type="button"
+                                onclick="encodePumltextResource();"
+                                class="btn btn-primary">Encode UML REST</button>
+                        <button id="fetchVersionInfoId"
                                 type="button"
                                 onclick="fetchVersionInfo();"
                                 class="btn btn-primary">Fetch Version Info</button>

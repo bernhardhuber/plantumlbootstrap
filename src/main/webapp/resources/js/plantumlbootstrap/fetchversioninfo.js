@@ -20,8 +20,7 @@
  */
 var fetchVersionInfo = (function () {
     //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
-    const generateImageResourceUrl = 'webresources/applAndPlantumlVersion/applAndPlantumlVersion';
-    const url = generateImageResourceUrl;
+    const url = 'webresources/applAndPlantumlVersion/applAndPlantumlVersion';
     return function fetchVersionInfo() {
         $.ajax({
             url: url,
