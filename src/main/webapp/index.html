@@ -15,6 +15,7 @@
         <script src="resources/js/simplejs/encode64.js"></script>
         <script src="resources/js/zlib/rawdeflate.js"></script>
         <script src="resources/js/zlib/rawinflate.js"></script>
+        <script src="resources/js/plantumlbootstrap/fetchversioninfo.js"></script>
 
         <script>
             var myCodeMirror;
@@ -108,27 +109,6 @@
                             const url = window.URL || window.webkitURL;
                             const src = url.createObjectURL(data);
                             imgdiagramElement.attr('src', src);
-                        }
-                    });
-                };
-            })();
-
-            /*
-             * fetch version info
-             * @type Function
-             */
-            var fetchVersionInfo = (function () {
-                //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
-                const generateImageResourceUrl = 'webresources/applAndPlantumlVersion/applAndPlantumlVersion';
-                const url = generateImageResourceUrl;
-                return function fetchVersionInfo() {
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        dataType: 'text',
-                        success(data) {
-                            //console.log('fetchVersionInfo ' + data);
-                            alert('' + data);
                         }
                     });
                 };
