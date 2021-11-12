@@ -17,8 +17,20 @@ CMD_MKLINK_TARGET=${JBOSS_DEPLOYMENTSDIR}/${DEPLOYMENT_ARTIFACT}.war
 #
 
 usage () {
-  echo "Usage $0 : [ install_wildfly | run_wildfly | status_wildfly | shutdown_wildfly | run_jboss_cli | create_mklink | dodeploy | undeploy | skipdeploy ]"
+  echo "Usage $0 : [ commands ]"
+  echo "wildfly commands:
+  install_wildfly 
+  run_wildfly : run wildfly
+  status_wildfly : show status of wildfly
+  shutdown_wildfly : shutdown running wildfly
+  run_jboss_cli : launch jboss-cli"
 
+  echo "deployment commands: 
+  create_mklink : create symbolik link for ${DEPLOYMENT_ARTIFACT}
+  dodeploy : deploy application ${DEPLOYMENT_ARTIFACT}
+  undeploy : undeploy application ${DEPLOYMENT_ARTIFACT}
+  add_skipdeploy : mark application ${DEPLOYMENT_ARTIFACT} as skipable
+  rm_skipdeploy : unmark application ${DEPLOYMENT_ARTIFACT} as skipable"
 
   echo "deployment link: ${CMD_MKLINK_LINK}"
   echo "deployment target: ${CMD_MKLINK_TARGET}"
@@ -61,8 +73,11 @@ undeploy () {
   rm ${CMD_MKLINK_TARGET}.deployed
 }
 
-skipdeploy () {
+add_skipdeploy () {
   touch ${CMD_MKLINK_TARGET}.skipdeploy
+}
+rm_skipdeploy () {
+  rm ${CMD_MKLINK_TARGET}.skipdeploy
 }
 
 
@@ -93,8 +108,11 @@ case "$1" in
     undeploy)
       undeploy
       ;;
-    skipdeploy)
-      skipdeploy
+    add_skipdeploy)
+      add_skipdeploy
+      ;;
+    rm_skipdeploy)
+      rm_skipdeploy
       ;;
     *)
       usage
