@@ -32,6 +32,11 @@ public class ApplAndPlantumlVersion {
 
     private static Logger LOGGER = Logger.getLogger(ApplAndPlantumlVersion.class.getName());
 
+    /**
+     * Retrieve version information about this application.
+     *
+     * @return
+     */
     String retrieveProjectFullDescription() {
         final String unknown = "-unknown-";
         final String versionproperties = "version.properties";
@@ -39,7 +44,7 @@ public class ApplAndPlantumlVersion {
         String projectFullDescription = unknown;
         try (InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(versionproperties)) {
             if (inStream != null) {
-                Properties prop = new Properties();
+                final Properties prop = new Properties();
                 prop.load(inStream);
                 projectFullDescription = prop.getProperty("projectFullDescription", unknown);
             } else {
@@ -51,8 +56,13 @@ public class ApplAndPlantumlVersion {
         return projectFullDescription;
     }
 
+    /**
+     * Retrieve version information about plantuml jar.
+     *
+     * @return
+     */
     String retrievePlantumlFullDescription() {
-        String fullDescription = Version.fullDescription();
+        final String fullDescription = Version.fullDescription();
         return fullDescription;
     }
 }
