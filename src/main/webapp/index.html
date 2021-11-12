@@ -62,17 +62,20 @@
             var decodePumltextResource = (function () {
                 //const baseUrl = 'http://localhost:8081/bootstrap1-1.0-SNAPSHOT2/';
                 const url = 'webresources/encoderDecoder/decode';
-                return function decodePumltextResource(encodedPumltext) {
+                return function decodePumltextResource() {
+                    const srcText = $('#encodedPumltextId').val()
+                    const target = $('#decodedPumltextId')
                     $.ajax({
                         url: url,
                         method: 'POST',
-                        data: encodedPumltext,
+                        data: srcText,
                         dataType: 'json',
                         success(data) {
                             //console.log('fetchVersionInfo ' + data);
-                            alert('' + JSON.stringify(data));
-                            const  pumltextDecoded = data.decoded;
+                            //alert('decodePumltextResource: ' + JSON.stringify(data));
+                            const pumltextDecoded = data.decoded;
                             const pumltextEncoded = data.encoded;
+                            target.val(pumltextDecoded);
                         }
                     });
                 };
@@ -93,7 +96,7 @@
                         dataType: 'json',
                         success(data) {
                             //console.log('fetchVersionInfo ' + data);
-                            //alert('' + JSON.stringify(data));
+                            //alert('encodePumltextResource: ' + JSON.stringify(data));
                             const  pumltextDecoded = data.decoded;
                             const pumltextEncoded = data.encoded;
                             publishEncodedPumltext(pumltextEncoded);
@@ -110,13 +113,13 @@
                     return sEncoded;
                 }
 
-                return function () {
+                return function encodePumltextJs() {
                     // save codeMirror-text in textArea
                     myCodeMirror.save();
                     const pumltextElement = $('#pumltext');
                     var pumltext = pumltextElement.val();
                     var pumltextEncoded = compressAndEncode(pumltext);
-                    //alert("encoded " + pumltextEncoded);
+                    //alert("encodePumltextJs: " + pumltextEncoded);
                     //console.log('encodePumltextJs '+data);
                     publishEncodedPumltext(pumltextEncoded);
                 };
@@ -204,8 +207,9 @@ A -> B \n\
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-3">
-                    <h3>Row1 Column 1-12</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                    <!--h3>Row1 Column 1-12</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p-->
+                    <h3>Snippets</h3>
                     <p>
                         <button class="btn btn-primary"
                                 onclick="processSnippets()">Load Snippets</button>
@@ -240,9 +244,9 @@ A -> B
                 </div>
 
                 <div class="col-md-9">
-                    <h3>Row2 Column 1-12</h3>
+                    <!--h3>Row2 Column 1-12</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p-->
                     <h3>PlantUml Text</h3>
                     <form method="post" accept-charset="UTF-8" >
                         <div class="form-group">
@@ -281,11 +285,78 @@ A -> B
                     <div>
                         <p>Image permalinks</p>
                         <div class="list-group">
-                            <a id="ahrefpng" class="list-group-item disabled" href="#">PNG Image</a>
-                            <a id="ahrefsvg" class="list-group-item disabled" href="#">SVG Image</a>
+                            <a id="ahrefpng" class="list-group-item list-group-item-info disabled" href="#">PNG Image</a>
+                            <a id="ahrefsvg" class="list-group-item list-group-item-info disabled" href="#">SVG Image</a>
                         </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p>Lorem ipsum</p>
+                        @@@
+                        <h3>PlantUml Text</h3>
+                        <form method="post" accept-charset="UTF-8" >
+                            <div class="form-group">
+                                <label id="encodeUmltextLabel" for="umltext">UML encoded</label>
+                                <textarea id="encodedPumltextId" name="text" class="form-control"
+                                          autofocus="false"
+                                          cols="80"
+                                          rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label id="decodedUmltextLabel" for="umltext">UML decoded</label>
+                                <textarea id="decodedPumltextId" name="text" class="form-control"
+                                          readonly="true"
+                                          autofocus="false"
+                                          cols="80"
+                                          rows="4"></textarea>
+                            </div>
+                        </form>
+                        <div class="btn-group">
+                            <button id="decodePumltextResourceId"
+                                    type="button"
+                                    onclick="decodePumltextResource();"
+                                    class="btn btn-primary">Decode UML REST</button>
+                            <button id="cleanDecodePumltextResourceId"
+                                    type="button"
+                                    onclick="$('#encodedPumltextId').val('');"
+                                    class="btn btn-primary">Clean Encoded Text</button>
+                            <button id="cleanEncodePumltextResourceId"
+                                    type="button"
+                                    onclick="$('#decodedPumltextId').val('');"
+                                    class="btn btn-primary">Clean Decoded Text</button>
+                        </div>
+
+                        @@@
                     </div>
                 </div>
             </div>
+
+            <!--div class="row">
+                <div class="col-md-3">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+                        <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+                        <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane fade in active">
+                            <h3>HOME</h3>
+                            <p>Some content.</p>
+                        </div>
+                        <div id="menu1" class="tab-pane fade">
+                            <h3>Menu 1</h3>
+                            <p>Some content in menu 1.</p>
+                        </div>
+                        <div id="menu2" class="tab-pane fade">
+                            <h3>Menu 2</h3>
+                            <p>Some content in menu 2.</p>
+                        </div>
+                    </div>
+                </div>
+            </div-->
+            <footer class="container-fluid">
+                <p class="text-center">Plantuml Bootstrap</p>
+            </footer>
     </body>
 </html>
