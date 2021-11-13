@@ -68,6 +68,7 @@
                     $.ajax({
                         url: url,
                         method: 'POST',
+                        contentType: 'text/plain',
                         data: srcText,
                         dataType: 'json',
                         success(data) {
@@ -92,6 +93,7 @@
                     $.ajax({
                         url: url,
                         method: 'POST',
+                        contentType: 'text/plain',
                         data: pumltextDecoded,
                         dataType: 'json',
                         success(data) {
