@@ -27,7 +27,7 @@ Default value is: postbuild.
 User property is: invoker.postBuildHookScript.
 */
 
-def name='db-flyway'
+def name='resteasyclient-integrationtest'
 
 println "Postbuild $name!"
 

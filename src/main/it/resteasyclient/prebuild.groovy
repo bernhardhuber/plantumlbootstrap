@@ -27,7 +27,7 @@ Default value is: prebuild.
 User property is: invoker.preBuildHookScript.
 */
 
-def name='db-flyway'
+def name='resteasyclient-integrationtest'
 println "Prebuild $name!"
 
 return true
