@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.plantumlbootstrap.restesyclient.integrationtest;
+package org.huberb.plantumlbootstrap.resteasyclient.integrationtest;
 
 import java.util.function.Predicate;
 import javax.ws.rs.client.Entity;
@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 public class EncoderDecoderResourceIT {
 
+    // TODO make it maven configurable
     String urlBase = "http://localhost:8081/plantumlbootstrap-1.0-SNAPSHOT";
 
     @Test
