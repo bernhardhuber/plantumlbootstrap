@@ -58,7 +58,6 @@ public class EncodeDecoderResource {
 
     @GET
     @Path(value = "/encode")
-    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String encodeGet(@QueryParam("text") String text) {
         final String encoded;
@@ -94,7 +93,6 @@ public class EncodeDecoderResource {
     //-------------------------------------------------------------------------
     @GET
     @Path(value = "/decode")
-    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String decodeGet(@QueryParam("text") String text) {
         final String decoded;
