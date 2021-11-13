@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.support;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.support;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncoderDecoder;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
 
 /**
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.version;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.version;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

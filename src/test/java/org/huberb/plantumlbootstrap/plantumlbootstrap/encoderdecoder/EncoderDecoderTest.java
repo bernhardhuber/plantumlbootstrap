@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

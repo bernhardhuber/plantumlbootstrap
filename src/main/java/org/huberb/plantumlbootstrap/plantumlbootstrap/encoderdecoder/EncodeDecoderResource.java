@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import org.huberb.wildfly.bootstrap1.plantuml.support.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 
 /**
  * REST Web Service

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.generateimage;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
 import java.io.IOException;
 import javax.enterprise.context.RequestScoped;
@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
-import org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncoderDecoder;
-import org.huberb.wildfly.bootstrap1.plantuml.support.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 
 /**
  * Generate an image from encoded or decoded uml text.

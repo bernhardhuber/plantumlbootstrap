@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml;
+package org.huberb.plantumlbootstrap.plantumlbootstrap;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -38,9 +38,9 @@ public class ApplicationConfig extends Application {
      * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncodeDecoderResource.class);
-        resources.add(org.huberb.wildfly.bootstrap1.plantuml.generateimage.GenerateImageResource.class);
-        resources.add(org.huberb.wildfly.bootstrap1.plantuml.version.ApplAndPlantumlVersionResource.class);
+        resources.add(org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncodeDecoderResource.class);
+        resources.add(org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage.GenerateImageResource.class);
+        resources.add(org.huberb.plantumlbootstrap.plantumlbootstrap.version.ApplAndPlantumlVersionResource.class);
     }
 
 }

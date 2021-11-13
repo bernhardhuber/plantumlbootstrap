@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.support;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.support;
 
-import org.huberb.wildfly.bootstrap1.plantuml.support.PumlDefaultEncodedDecoded;
-import org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncoderDecoder;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

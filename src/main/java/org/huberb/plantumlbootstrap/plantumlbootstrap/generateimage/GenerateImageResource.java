@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.generateimage;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
-import org.huberb.wildfly.bootstrap1.plantuml.support.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

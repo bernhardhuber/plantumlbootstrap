@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.generateimage;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

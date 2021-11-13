@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.huberb.wildfly.bootstrap1.plantuml.generateimage;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
