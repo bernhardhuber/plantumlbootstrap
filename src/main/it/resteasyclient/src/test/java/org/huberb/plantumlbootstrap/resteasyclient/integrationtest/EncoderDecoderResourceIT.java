@@ -37,8 +37,12 @@ public class EncoderDecoderResourceIT {
     // TODO make it maven configurable
     String urlBase = "http://localhost:8081/plantumlbootstrap-1.0-SNAPSHOT";
 
+    //--- encode ---
+    /**
+     * Test method encodeGet of EncoderDecoderResource.
+     */
     @Test
-    public void testEncode() {
+    public void testEncodeGet() {
         final String url = urlBase + "/webresources/encoderDecoder/encode";
         final String body = "@startuml\n"
                 + "Alice --> Bob : hello\n"
@@ -46,35 +50,53 @@ public class EncoderDecoderResourceIT {
 
         final ResteasyClient resteasyClient = new ResteasyClientBuilderImpl()
                 .build();
-        try (ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
+        try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
+            final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
+            // POST
+            try (final Response encodePostResponse = resteasyWebTarget
+                    .queryParam("text", body)
+                    .request()
+                    .accept(MediaType.TEXT_PLAIN)
+                    .get()) {
+                final String entityRead = EntityReadSupport.retrieveEntityReadFromResponse("testEncodeGet", encodePostResponse);
+                final String m = "" + encodePostResponse;
+                assertEquals(Status.OK.getStatusCode(), encodePostResponse.getStatus(), m);
+                assertTrue(
+                        entityRead.length() > 0,
+                        m);
+                final Predicate<String> pred1 = (s) -> s.length() > 0;
+                assertTrue(pred1.test(entityRead), m);
+            }
+        }
+        assertTrue(resteasyClient.isClosed());
+    }
+
+    /**
+     * Test method encodePost of EncoderDecoderResource.
+     */
+    @Test
+    public void testEncodePost() {
+        final String url = urlBase + "/webresources/encoderDecoder/encode";
+        final String body = "@startuml\n"
+                + "Alice --> Bob : hello\n"
+                + "@enduml";
+
+        final ResteasyClient resteasyClient = new ResteasyClientBuilderImpl()
+                .build();
+        try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
             // POST
             try (final Response encodePostResponse = resteasyWebTarget
                     .request()
                     .accept(MediaType.APPLICATION_JSON)
                     .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
-                final String entityRead = encodePostResponse.readEntity(String.class);
-                System.out.printf("testEncode:%n"
-                        + "HTTP code: %d%n"
-                        + "HTTP content-length: %d%n"
-                        + "has entity: %s%n"
-                        + "entity1: %s%n"
-                        + "entity2: %s%n",
-                        encodePostResponse.getStatus(),
-                        encodePostResponse.getLength(),
-                        "?X?", //encodePostResponse.hasEntity(),
-                        "?X?", //encodePostResponse.getEntity(),
-                        entityRead
-                );
+                final String entityRead = EntityReadSupport.retrieveEntityReadFromResponse("testEncodePost", encodePostResponse);
                 final String m = "" + encodePostResponse;
-
                 assertEquals(Status.OK.getStatusCode(), encodePostResponse.getStatus(), m);
-
                 assertTrue(
                         entityRead.contains("\"decoded\":")
                         && entityRead.contains("\"encoded\":"),
                         m);
-
                 final Predicate<String> pred1 = (s)
                         -> s.contains("\"decoded\":")
                         && s.contains("\"encoded\":");
@@ -84,41 +106,62 @@ public class EncoderDecoderResourceIT {
         assertTrue(resteasyClient.isClosed());
     }
 
+    //--- decode ---
+    /**
+     * Test method decodeGet of EncoderDecoderResource.
+     */
     @Test
-    public void testDecode() {
+    public void testDecodeGet() {
         final String url = urlBase + "/webresources/encoderDecoder/decode";
         final String body = "AyaioKbL24ujB4tDImOoyZ8B2b9B50ovdFAJ57Jj51npCe72LWePgJav-L0U5uG2oe8KmUH0R000";
 
         final ResteasyClient resteasyClient = new ResteasyClientBuilderImpl()
                 .build();
-        try (ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
+        try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
+            final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
+            // POST
+            try (final Response decodePostResponse = resteasyWebTarget
+                    .queryParam("text", body)
+                    .request()
+                    .accept(MediaType.TEXT_PLAIN)
+                    .get()) {
+                final String entityRead = EntityReadSupport.retrieveEntityReadFromResponse("testDecodeGet", decodePostResponse);
+                final String m = "" + decodePostResponse;
+                assertEquals(Status.OK.getStatusCode(), decodePostResponse.getStatus(), m);
+                assertTrue(
+                        entityRead.length() > 0,
+                        m);
+                final Predicate<String> pred1 = (s) -> s.length() > 0;
+                assertTrue(pred1.test(entityRead), m);
+            }
+        }
+        assertTrue(resteasyClient.isClosed());
+    }
+
+    /**
+     * Test method decodePost of EncoderDecoderResource.
+     */
+    @Test
+    public void testDecodePost() {
+        final String url = urlBase + "/webresources/encoderDecoder/decode";
+        final String body = "AyaioKbL24ujB4tDImOoyZ8B2b9B50ovdFAJ57Jj51npCe72LWePgJav-L0U5uG2oe8KmUH0R000";
+
+        final ResteasyClient resteasyClient = new ResteasyClientBuilderImpl()
+                .build();
+        try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
             // POST
             try (final Response decodePostResponse = resteasyWebTarget
                     .request()
                     .accept(MediaType.APPLICATION_JSON)
                     .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
-                final String entityRead = decodePostResponse.readEntity(String.class);
-                System.out.printf("testDecode:%n"
-                        + "HTTP code: %d%n"
-                        + "HTTP content-length: %d%n"
-                        + "has entity: %s%n"
-                        + "entity1: %s%n"
-                        + "entity2: %s%n",
-                        decodePostResponse.getStatus(),
-                        decodePostResponse.getLength(),
-                        "?X?", //encodePostResponse.hasEntity(),
-                        "?X?", //encodePostResponse.getEntity(),
-                        entityRead
-                );
+                final String entityRead = EntityReadSupport.retrieveEntityReadFromResponse("testDecodePost", decodePostResponse);
                 final String m = "" + decodePostResponse;
                 assertEquals(Status.OK.getStatusCode(), decodePostResponse.getStatus(), m);
-
                 assertTrue(
                         entityRead.contains("\"decoded\":")
                         && entityRead.contains("\"encoded\":"),
                         m);
-
                 final Predicate<String> pred1 = (s)
                         -> s.contains("\"decoded\":")
                         && s.contains("\"encoded\":");
@@ -128,7 +171,8 @@ public class EncoderDecoderResourceIT {
         assertTrue(resteasyClient.isClosed());
     }
 
-    static class ResteasyClientAutoCloseable implements AutoCloseable {
+
+    public static class ResteasyClientAutoCloseable implements AutoCloseable {
 
         private final ResteasyClient client;
 
