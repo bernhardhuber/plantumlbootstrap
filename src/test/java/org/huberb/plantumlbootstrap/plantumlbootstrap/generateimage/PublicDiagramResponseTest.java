@@ -15,10 +15,12 @@
  */
 package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
+import java.awt.image.BufferedImage;
+import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +64,7 @@ public class PublicDiagramResponseTest {
         final PublicDiagramResponse instance = new PublicDiagramResponse(request, response, fileFormat);
         instance.sendDiagram(uml, idx);
 
+        // assert magic number 
         try (final ByteArrayOutputStream baos = myServletOutputStream.getBaos()) {
             assertNotNull(baos);
             final byte[] baosByteArray = baos.toByteArray();
@@ -74,6 +77,18 @@ public class PublicDiagramResponseTest {
                     (char) baosByteArray[3]
             );
             assertEquals("89 P N G", firstFourBytesFormatted);
+        }
+        // assert image is readable
+        try (final ByteArrayOutputStream baos = myServletOutputStream.getBaos()) {
+            assertNotNull(baos);
+            final byte[] baosByteArray = baos.toByteArray();
+            try (final ByteArrayInputStream bais = new ByteArrayInputStream(baosByteArray)) {
+                final BufferedImage bi = ImageIO.read(bais);
+                assertEquals(115, bi.getWidth());
+                assertEquals(135, bi.getHeight());
+                //System.out.printf("image props: %s%n", Arrays.toString(bi.getPropertyNames()));
+                assertEquals(TYPE_3BYTE_BGR, bi.getType());
+            }
         }
         Mockito.verify(response, Mockito.times(0)).setStatus(500);
     }
@@ -101,43 +116,6 @@ public class PublicDiagramResponseTest {
         Mockito.verify(response, Mockito.times(0)).setStatus(500);
     }
 
-    static class MockHttpServletResponseFactory {
-
-        private final DelegatingServletOutputStream delegatingServletOutputStream;
-        private final StringWriter sw;
-        private final PrintWriter pw;
-
-        public MockHttpServletResponseFactory() {
-            this.delegatingServletOutputStream = new DelegatingServletOutputStream();
-            this.sw = new StringWriter();
-            this.pw = new PrintWriter(this.sw);
-        }
-
-        HttpServletRequest createHttpServletRequest() {
-            final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-            return request;
-        }
-
-        HttpServletResponse createMockHttpServletResponseWithOutpuStream() throws IOException {
-            final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-            Mockito.when(response.getOutputStream()).thenReturn(delegatingServletOutputStream);
-            return response;
-        }
-
-        HttpServletResponse createMockHttpServletResponseWithPrintWriter() throws IOException {
-            final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-            Mockito.when(response.getWriter()).thenReturn(pw);
-            return response;
-        }
-
-        DelegatingServletOutputStream getDelegatingServletOutputStream() {
-            return this.delegatingServletOutputStream;
-        }
-
-        StringWriter getStringWriter() {
-            return this.sw;
-        }
-    }
 
     static class DelegatingServletOutputStream extends ServletOutputStream {
 
