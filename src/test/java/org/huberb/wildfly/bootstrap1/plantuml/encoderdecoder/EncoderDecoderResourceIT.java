@@ -47,13 +47,11 @@ public class EncoderDecoderResourceIT {
                 .build();
         try (ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
-
             // POST
-            final Response encodePostResponse = resteasyWebTarget
+            try (final Response encodePostResponse = resteasyWebTarget
                     .request()
                     .accept(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(body, MediaType.TEXT_PLAIN));
-            try (ResponseAutoCloseable rac = new ResponseAutoCloseable(encodePostResponse)) {
+                    .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
                 final String entityRead = encodePostResponse.readEntity(String.class);
                 System.out.printf("testEncode:%n"
                         + "HTTP code: %d%n"
@@ -94,14 +92,11 @@ public class EncoderDecoderResourceIT {
                 .build();
         try (ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
-
             // POST
-            final Response decodePostResponse = resteasyWebTarget
+            try (final Response decodePostResponse = resteasyWebTarget
                     .request()
                     .accept(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(body, MediaType.TEXT_PLAIN));
-            try (ResponseAutoCloseable rac = new ResponseAutoCloseable(decodePostResponse)) {
-
+                    .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
                 final String entityRead = decodePostResponse.readEntity(String.class);
                 System.out.printf("testDecode:%n"
                         + "HTTP code: %d%n"
@@ -150,26 +145,5 @@ public class EncoderDecoderResourceIT {
                 client.close();
             }
         }
-    }
-
-    static class ResponseAutoCloseable implements AutoCloseable {
-
-        private final Response response;
-
-        public ResponseAutoCloseable(Response response) {
-            this.response = response;
-        }
-
-        public Response response() {
-            return this.response;
-        }
-
-        @Override
-        public void close() {
-            if (response != null) {
-                response.close();
-            }
-        }
-
     }
 }

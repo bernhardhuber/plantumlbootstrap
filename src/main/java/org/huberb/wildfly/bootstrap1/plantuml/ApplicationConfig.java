@@ -33,15 +33,14 @@ public class ApplicationConfig extends Application {
     }
 
     /**
-     * Do not modify addRestResourceClasses() method.
-     * It is automatically populated with
-     * all resources defined in the project.
-     * If required, comment out calling this method in getClasses().
+     * Do not modify addRestResourceClasses() method. It is automatically
+     * populated with all resources defined in the project. If required, comment
+     * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(org.huberb.wildfly.bootstrap1.plantuml.encoderdecoder.EncodeDecoderResource.class);
         resources.add(org.huberb.wildfly.bootstrap1.plantuml.generateimage.GenerateImageResource.class);
         resources.add(org.huberb.wildfly.bootstrap1.plantuml.version.ApplAndPlantumlVersionResource.class);
     }
-    
+
 }
