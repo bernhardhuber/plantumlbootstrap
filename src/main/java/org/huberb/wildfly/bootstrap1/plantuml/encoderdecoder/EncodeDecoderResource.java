@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -57,6 +58,7 @@ public class EncodeDecoderResource {
 
     @GET
     @Path(value = "/encode")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String encodeGet(@QueryParam("text") String text) {
         final String encoded;
@@ -70,6 +72,7 @@ public class EncodeDecoderResource {
 
     @POST
     @Path(value = "/encode")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response encodePost(String text) {
         final String encoded;
@@ -91,6 +94,7 @@ public class EncodeDecoderResource {
     //-------------------------------------------------------------------------
     @GET
     @Path(value = "/decode")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String decodeGet(@QueryParam("text") String text) {
         final String decoded;
@@ -104,6 +108,7 @@ public class EncodeDecoderResource {
 
     @POST
     @Path(value = "/decode")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response decodePost(String text) {
         final String decoded;
