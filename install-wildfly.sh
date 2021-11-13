@@ -3,6 +3,13 @@
 #set -x
 
 #----------
+# Bash script for 
+# - downloading wildfly
+# - run, shutdown, status wildfly
+# - run jboss-cli
+# - deploying exploded app
+# - undeploying app
+# - add/remove skipdeploy app
 #
 BASEDIR=$(dirname "$0")
 JBOSS_BASEDIR=${BASEDIR}/target/wildfly/wildfly-25.0.0.Final
@@ -15,7 +22,6 @@ CMD_MKLINK_TARGET=${JBOSS_DEPLOYMENTSDIR}/${DEPLOYMENT_ARTIFACT}.war
 
 #----------
 #
-
 usage () {
   echo "Usage $0 : [ commands ]"
   echo "wildfly commands:
@@ -36,6 +42,7 @@ usage () {
   echo "deployment target: ${CMD_MKLINK_TARGET}"
 }
 
+#----------
 install_wildfly () {
   $M2_HOME/bin/mvn -Pinstall-wildfly dependency:unpack@unpack
 }
@@ -56,6 +63,7 @@ run_jboss_cli() {
   ${JBOSS_BINDIR}/jboss-cli.sh --controller=localhost:9991 --connect
 }
 
+#----------
 create_mklink () {
   if [ ! -d "${CMD_MKLINK_TARGET}" ]
   then
