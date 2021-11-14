@@ -94,8 +94,8 @@ public class PublicDiagramResponseTest {
                     assertTrue(allowedWidth.contains(bi.getWidth()), m);
                 }
                 {
-                    // 135 local
-                    final List<Integer> allowedHeight = Arrays.asList(135);
+                    // 135 local, 131 github
+                    final List<Integer> allowedHeight = Arrays.asList(135, 131);
                     final String m = "" + allowedHeight + ", " + bi.getHeight();
                     assertTrue(allowedHeight.contains(bi.getHeight()), m);
                 }
