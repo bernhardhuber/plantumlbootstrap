@@ -20,6 +20,8 @@ import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
@@ -84,8 +86,19 @@ public class PublicDiagramResponseTest {
             final byte[] baosByteArray = baos.toByteArray();
             try (final ByteArrayInputStream bais = new ByteArrayInputStream(baosByteArray)) {
                 final BufferedImage bi = ImageIO.read(bais);
-                assertEquals(115, bi.getWidth());
-                assertEquals(135, bi.getHeight());
+                System.out.printf("testSendDiagram_PNG width %d, height %d%n", bi.getWidth(), bi.getHeight());
+                {
+                    // 115 local, 120 github
+                    final List<Integer> allowedWidth = Arrays.asList(115, 120);
+                    final String m = "" + allowedWidth + ", " + bi.getWidth();
+                    assertTrue(allowedWidth.contains(bi.getWidth()), m);
+                }
+                {
+                    // 135 local
+                    final List<Integer> allowedHeight = Arrays.asList(135);
+                    final String m = "" + allowedHeight + ", " + bi.getHeight();
+                    assertTrue(allowedHeight.contains(bi.getHeight()), m);
+                }
                 //System.out.printf("image props: %s%n", Arrays.toString(bi.getPropertyNames()));
                 assertEquals(TYPE_3BYTE_BGR, bi.getType());
             }
@@ -115,7 +128,6 @@ public class PublicDiagramResponseTest {
 
         Mockito.verify(response, Mockito.times(0)).setStatus(500);
     }
-
 
     static class DelegatingServletOutputStream extends ServletOutputStream {
 
