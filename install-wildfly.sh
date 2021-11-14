@@ -15,6 +15,7 @@ BASEDIR=$(dirname "$0")
 JBOSS_BASEDIR=${BASEDIR}/target/wildfly/wildfly-25.0.0.Final
 JBOSS_BINDIR=${JBOSS_BASEDIR}/bin
 JBOSS_DEPLOYMENTSDIR=${JBOSS_BASEDIR}/standalone/deployments
+
 DEPLOYMENT_ARTIFACT=plantumlbootstrap-1.0-SNAPSHOT
 
 CMD_MKLINK_LINK=${BASEDIR}/target/${DEPLOYMENT_ARTIFACT}
@@ -23,26 +24,34 @@ CMD_MKLINK_TARGET=${JBOSS_DEPLOYMENTSDIR}/${DEPLOYMENT_ARTIFACT}.war
 #----------
 #
 usage () {
-  echo "Usage $0 : [ commands ]"
-  echo "wildfly commands:
+  cat << -EOF-
+Usage $0 : [ commands ]
+
+general commands:
+  help
+
+wildfly commands:
   install_wildfly 
   run_wildfly : run wildfly
   status_wildfly : show status of wildfly
   shutdown_wildfly : shutdown running wildfly
-  run_jboss_cli : launch jboss-cli"
+  run_jboss_cli : launch jboss-cli
 
-  echo "deployment commands: 
+deployment commands: 
   create_mklink : create symbolik link for ${DEPLOYMENT_ARTIFACT}
   dodeploy : deploy application ${DEPLOYMENT_ARTIFACT}
   undeploy : undeploy application ${DEPLOYMENT_ARTIFACT}
   add_skipdeploy : mark application ${DEPLOYMENT_ARTIFACT} as skipable
-  rm_skipdeploy : unmark application ${DEPLOYMENT_ARTIFACT} as skipable"
+  rm_skipdeploy : unmark application ${DEPLOYMENT_ARTIFACT} as skipable
 
-  echo "deployment link: ${CMD_MKLINK_LINK}"
-  echo "deployment target: ${CMD_MKLINK_TARGET}"
+deployment link: ${CMD_MKLINK_LINK}
+deployment target: ${CMD_MKLINK_TARGET}
+
+-EOF-
 }
 
 #----------
+# wildfly commands:
 install_wildfly () {
   $M2_HOME/bin/mvn -Pinstall-wildfly dependency:unpack@unpack
 }
@@ -64,6 +73,7 @@ run_jboss_cli() {
 }
 
 #----------
+# deployment commands: 
 create_mklink () {
   if [ ! -d "${CMD_MKLINK_TARGET}" ]
   then
@@ -92,6 +102,9 @@ rm_skipdeploy () {
 #----------
 #
 case "$1" in
+    help)
+      usage
+      ;;
     install_wildfly)
       install_wildfly
       ;;
