@@ -15,18 +15,25 @@
  */
 package org.huberb.plantumlbootstrap.resteasyclient.integrationtest;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.function.Predicate;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
+import org.apache.commons.io.IOUtils;
 import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.EncoderDecoderResourceIT.ResteasyClientAutoCloseable;
 import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationProps;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author berni3
  */
-public class ApplAndPlantumlVersionResourceIT {
+public class GenerateImageResourceIT {
 
     static String URL_BASE = "http://localhost:8081/plantumlbootstrap-1.0-SNAPSHOT";
 
@@ -48,12 +55,21 @@ public class ApplAndPlantumlVersionResourceIT {
         Assumptions.assumeTrue(URL_BASE.startsWith("http"), m);
     }
 
+    public GenerateImageResourceIT() {
+    }
+
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
     /**
      * Test method encodeGet of ApplAndPlantumlVersionResource.
      */
     @Test
-    public void testApplAndPlantumlVersion() {
-        final String url = URL_BASE + "/webresources/applAndPlantumlVersion/applAndPlantumlVersion";
+    public void testGenerateImgagePngDecoded() throws IOException {
+        final String url = URL_BASE + "/webresources/generateImage/png/decoded";
+        final String body = "@startuml\n"
+                + "Alice --> Bob : hello\n"
+                + "@enduml";
 
         final ResteasyClient resteasyClient = new ResteasyClientBuilderImpl()
                 .build();
@@ -62,24 +78,46 @@ public class ApplAndPlantumlVersionResourceIT {
             // POST
             try (final Response response = resteasyWebTarget
                     .request()
-                    .accept(MediaType.TEXT_PLAIN)
-                    .get()) {
-                final String entityRead = EntityReadSupport.retrieveEntityReadFromResponse("testApplAndPlantumlVersion", response);
+                    .accept("image/png")
+                    .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
                 final String m = "" + response;
                 assertEquals(Status.OK.getStatusCode(), response.getStatus(), m);
+                assertTrue(response.hasEntity(), m);
 
-                //Project version: plantumlbootstrap-1.0-SNAPSHOT
-                //Plantuml version: PlantUML version 1.2021.12 (Tue Oct 05 18:01:58 CEST 2021)
-                assertTrue(
-                        entityRead.contains("Project version:")
-                        && entityRead.contains("Plantuml version:"),
-                        m);
-                final Predicate<String> pred1 = (s) -> s.contains("Project version:")
-                        && s.contains("Plantuml version:");
-                assertTrue(pred1.test(entityRead), m);
+                final byte[] bytes = responseReadEntity(response);
+                assertNotNull(bytes);
+                assertTrue(bytes.length > 0);
+                try (InputStream is = new ByteArrayInputStream(bytes)) {
+                    assertNotNull(is, m);
+                    final byte[] bytesOfRange_0_10 = new byte[10];
+                    is.read(bytesOfRange_0_10, 0, 10);
+                    final String magic = String.format("%x %c %c %c",
+                            bytesOfRange_0_10[0],
+                            bytesOfRange_0_10[1],
+                            bytesOfRange_0_10[2],
+                            bytesOfRange_0_10[3]
+                    );
+                    assertEquals("89 P N G", magic, m);
+                }
+                try (InputStream is = new ByteArrayInputStream(bytes)) {
+                    assertNotNull(is, m);
+                    final BufferedImage bufferedImage = ImageIO.read(is);
+                    assertEquals(115, bufferedImage.getWidth());
+                    assertEquals(135, bufferedImage.getHeight());
+                }
             }
         }
         assertTrue(resteasyClient.isClosed());
     }
 
+    byte[] responseReadEntity(Response response) throws IOException {
+        final byte[] bytes;
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                InputStream is = response.readEntity(InputStream.class)) {
+            IOUtils.copyLarge(is, baos);
+            baos.flush();
+            bytes = baos.toByteArray();
+        }
+        return bytes;
+    }
 }

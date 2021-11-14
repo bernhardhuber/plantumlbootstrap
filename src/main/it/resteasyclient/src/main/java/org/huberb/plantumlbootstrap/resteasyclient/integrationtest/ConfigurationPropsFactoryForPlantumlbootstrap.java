@@ -15,16 +15,20 @@
  */
 package org.huberb.plantumlbootstrap.resteasyclient.integrationtest;
 
-import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationPropsFactory;
 import java.io.IOException;
 import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationProps;
+import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationPropsFactory;
 
 /**
- *
+ * Factory creating {@link  ConfigurationProps} for plantumlbootstrap
+ * integrationtests.
+ * <p>
+
+ *</p>
  * @author berni3
  */
 class ConfigurationPropsFactoryForPlantumlbootstrap {
-    
+
     final String prefix = "plantumlbootstrap.";
     final String resourceName = "configuration.properties";
     final String systemPropertyFile = "configurationPropertyFile";
@@ -34,9 +38,12 @@ class ConfigurationPropsFactoryForPlantumlbootstrap {
     public static final ConfigurationPropsFactoryForPlantumlbootstrap INSTANCE = new ConfigurationPropsFactoryForPlantumlbootstrap();
 
     public static ConfigurationProps create() throws IOException {
-        ConfigurationPropsFactory xx = new ConfigurationPropsFactory(INSTANCE.prefix, INSTANCE.resourceName, INSTANCE.systemPropertyFile) {
+        ConfigurationPropsFactory xx = new ConfigurationPropsFactory(
+                INSTANCE.prefix,
+                INSTANCE.resourceName,
+                INSTANCE.systemPropertyFile) {
         };
         return xx.create();
     }
-    
+
 }

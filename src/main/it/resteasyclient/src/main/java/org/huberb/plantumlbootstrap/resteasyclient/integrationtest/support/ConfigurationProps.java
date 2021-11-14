@@ -18,6 +18,10 @@ package org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support;
 import java.util.Properties;
 
 /**
+ * Configuration properties holds configuration property key value pairs.
+ * <p>
+ * Optionally you can define a prefix (aka namespace) for grouping the keys.
+ * </p>
  *
  * @author berni3
  */
@@ -43,20 +47,6 @@ public class ConfigurationProps {
     }
 
     //---
-    public Properties _getProperties() {
-        final Properties result;
-        if (prefix != null && !prefix.isEmpty()) {
-            final Properties propsFiltered = new Properties();
-            this.props.entrySet().stream()
-                    .filter((e) -> String.valueOf(e.getKey()).startsWith(prefix))
-                    .forEach((e) -> propsFiltered.put(e.getKey(), e.getValue()));
-            result = propsFiltered;
-        } else {
-            result = this.props;
-        }
-        return result;
-    }
-
     public Properties getAllProperties() {
         return this.props;
     }
@@ -95,6 +85,11 @@ public class ConfigurationProps {
         return keyForQuery;
     }
 
+    /**
+     * Return all key/value pairs regardless of its prefix.
+     *
+     * @return
+     */
     public String formatAllProps() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("prefix: %s%n", prefix));
@@ -107,6 +102,11 @@ public class ConfigurationProps {
         return sb.toString();
     }
 
+    /**
+     * Return only key/value pairs where key starts with the prefix.
+     *
+     * @return
+     */
     public String formatPrefixedProps() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("prefix: %s%n", prefix));
