@@ -15,10 +15,6 @@
  */
 package org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -27,14 +23,50 @@ import java.util.Properties;
  */
 public class ConfigurationProps {
 
+    private final String prefix;
     private final Properties props;
 
+    public ConfigurationProps(String prefix) {
+        this(prefix, new Properties());
+    }
+
     public ConfigurationProps(Properties props) {
+        this("", props);
+    }
+
+    public ConfigurationProps(String prefix, Properties props) {
+        if (prefix == null) {
+            prefix = "";
+        }
+        this.prefix = prefix;
         this.props = props;
     }
 
-    public Properties getProperties() {
+    //---
+    public Properties _getProperties() {
+        final Properties result;
+        if (prefix != null && !prefix.isEmpty()) {
+            final Properties propsFiltered = new Properties();
+            this.props.entrySet().stream()
+                    .filter((e) -> String.valueOf(e.getKey()).startsWith(prefix))
+                    .forEach((e) -> propsFiltered.put(e.getKey(), e.getValue()));
+            result = propsFiltered;
+        } else {
+            result = this.props;
+        }
+        return result;
+    }
+
+    public Properties getAllProperties() {
         return this.props;
+    }
+
+    public void putIfAbsent(Object k, Object v) {
+        props.putIfAbsent(k, v);
+    }
+
+    public void put(Object k, Object v) {
+        props.put(k, v);
     }
 
     public Object getOrDefault(Object key, Object defaultValue) {
@@ -45,80 +77,46 @@ public class ConfigurationProps {
         return (T) props.getOrDefault(key, defaultValue);
     }
 
-    public String getOrDefault(String key, String defaultValue) {
-        return props.getProperty(key, defaultValue);
+    public String getPropertyOrDefault(String key, String defaultValue) {
+        final String result;
+        final String keyForQuery = calcPrefixedKey(key);
+        result = props.getProperty(keyForQuery, defaultValue);
+        return result;
     }
 
-    public static class ConfigurationPropsFactory {
-
-        public ConfigurationProps create(
-                Properties props,
-                boolean systemProperties,
-                File configurationPropsFile,
-                String classpathResourceProperties
-        ) throws IOException {
-            final ConfigurationProps configurationProps = loadProperties(new Properties());
-            final ConfigurationProps configurationPropsEmpty = loadProperties(new Properties());
-
-            //---
-            ConfigurationProps configurationPropsFromClasspath = configurationPropsEmpty;
-            if (classpathResourceProperties != null) {
-                configurationPropsFromClasspath = loadFromClasspath(classpathResourceProperties);
-            }
-            //---
-            ConfigurationProps configurationPropsFromFile = configurationPropsEmpty;
-            if (configurationPropsFile != null) {
-                configurationPropsFromFile = loadFromFile(configurationPropsFile);
-            }
-            //---
-            ConfigurationProps configurationPropsFromSystemProperties = configurationPropsEmpty;
-            if (systemProperties) {
-                configurationPropsFromSystemProperties = loadProperties(System.getProperties());
-            }
-            //---
-            ConfigurationProps configurationPropsFromProperties = configurationPropsEmpty;
-            if (props != null) {
-                configurationPropsFromProperties = loadProperties(props);
-            }
-
-            // flatten by priority
-            configurationPropsFromProperties.props.forEach((k, v) -> configurationProps.props.putIfAbsent(k, v)); // 400 -highest
-            configurationPropsFromSystemProperties.props.forEach((k, v) -> configurationProps.props.putIfAbsent(k, v)); // 300 - high
-            configurationPropsFromFile.props.forEach((k, v) -> configurationProps.props.putIfAbsent(k, v)); // 200 - low
-            configurationPropsFromClasspath.props.forEach((k, v) -> configurationProps.props.putIfAbsent(k, v)); // 100 - lowest
-
-            return configurationProps;
+    String calcPrefixedKey(String key) {
+        final String keyForQuery;
+        if (prefix != null && !prefix.isEmpty()
+                && !key.startsWith(prefix)) {
+            keyForQuery = prefix + key;
+        } else {
+            keyForQuery = key;
         }
-
-        ConfigurationProps loadFromClasspath(String propsResourceName) throws IOException {
-            final Properties props = new Properties();
-            try (InputStream is = this.getClass().getClassLoader().getResourceAsStream(propsResourceName)) {
-                if (is != null) {
-                    props.load(is);
-                }
-            }
-            return new ConfigurationProps(props);
-        }
-
-        ConfigurationProps loadFromFile(File propsFile) throws IOException {
-            final Properties props = new Properties();
-            boolean guard = true;
-            guard = guard && propsFile != null;
-            guard = guard && propsFile.exists();
-            guard = guard && propsFile.isFile();
-            guard = guard && propsFile.canRead();
-            if (guard) {
-                try (InputStream is = new FileInputStream(propsFile)) {
-                    props.load(is);
-                }
-            }
-            return new ConfigurationProps(props);
-        }
-
-        ConfigurationProps loadProperties(Properties propsProps) {
-            return new ConfigurationProps(propsProps);
-        }
-
+        return keyForQuery;
     }
 
+    public String formatAllProps() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("prefix: %s%n", prefix));
+        props.entrySet().stream()
+                .sorted((e1, e2) -> e1.getKey().toString().compareTo(e2.getKey().toString()))
+                .forEach((e) -> {
+                    sb.append(String.format("%s=%s%n", e.getKey(), e.getValue()));
+                }
+                );
+        return sb.toString();
+    }
+
+    public String formatPrefixedProps() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("prefix: %s%n", prefix));
+        props.entrySet().stream()
+                .filter((e) -> e.getKey().toString().startsWith(prefix))
+                .sorted((e1, e2) -> e1.getKey().toString().compareTo(e2.getKey().toString()))
+                .forEach((e) -> {
+                    sb.append(String.format("%s=%s%n", e.getKey(), e.getValue()));
+                }
+                );
+        return sb.toString();
+    }
 }

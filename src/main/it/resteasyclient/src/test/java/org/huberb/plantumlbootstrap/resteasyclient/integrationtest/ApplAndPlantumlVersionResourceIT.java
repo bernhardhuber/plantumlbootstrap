@@ -15,9 +15,7 @@
  */
 package org.huberb.plantumlbootstrap.resteasyclient.integrationtest;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.function.Predicate;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,12 +23,12 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.EncoderDecoderResourceIT.ResteasyClientAutoCloseable;
 import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationProps;
-import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.ConfigurationProps.ConfigurationPropsFactory;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -40,18 +38,14 @@ import org.junit.jupiter.api.Test;
  */
 public class ApplAndPlantumlVersionResourceIT {
 
-    // TODO make it maven configurable
     static String URL_BASE = "http://localhost:8081/plantumlbootstrap-1.0-SNAPSHOT";
 
     @BeforeAll
     public static void setUpConfigurationProps() throws IOException {
-        final Properties props = new Properties();
-        final boolean systemProperties = true;
-        final File configurationPropsFile = null;
-        final String classpathResourceProperties = "configuration.properties";
-        final ConfigurationProps configurationProps = new ConfigurationPropsFactory().create(props, true, configurationPropsFile, classpathResourceProperties);
-
-        URL_BASE = configurationProps.getOrDefault("urlBase", URL_BASE);
+        final ConfigurationProps configurationProps = ConfigurationPropsFactoryForPlantumlbootstrap.create();
+        URL_BASE = configurationProps.getPropertyOrDefault("urlBase", URL_BASE);
+        final String m = "" + URL_BASE;
+        Assumptions.assumeTrue(URL_BASE.startsWith("http"), m);
     }
 
     /**
