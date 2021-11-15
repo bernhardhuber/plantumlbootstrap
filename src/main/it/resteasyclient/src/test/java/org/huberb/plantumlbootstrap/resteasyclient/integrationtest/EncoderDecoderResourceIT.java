@@ -64,7 +64,7 @@ public class EncoderDecoderResourceIT {
                 .build();
         try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
-            // POST
+            // GET
             try (final Response response = resteasyWebTarget
                     .queryParam("text", body)
                     .request()
@@ -131,7 +131,7 @@ public class EncoderDecoderResourceIT {
                 .build();
         try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
-            // POST
+            // GET
             try (final Response response = resteasyWebTarget
                     .queryParam("text", body)
                     .request()

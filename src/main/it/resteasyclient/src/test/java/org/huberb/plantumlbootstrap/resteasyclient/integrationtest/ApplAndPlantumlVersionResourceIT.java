@@ -59,7 +59,7 @@ public class ApplAndPlantumlVersionResourceIT {
                 .build();
         try (final ResteasyClientAutoCloseable rcac = new ResteasyClientAutoCloseable(resteasyClient)) {
             final ResteasyWebTarget resteasyWebTarget = resteasyClient.target(UriBuilder.fromPath(url));
-            // POST
+            // GET
             try (final Response response = resteasyWebTarget
                     .request()
                     .accept(MediaType.TEXT_PLAIN)

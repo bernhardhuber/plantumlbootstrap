@@ -42,10 +42,10 @@ public class ConfigurationPropsBuilderTest {
         final String classpathResourceProperties = null;
         final ConfigurationPropsBuilder instance = new ConfigurationPropsBuilder();
         instance
-                .props400(props)
-                .systemProperties300(false)
-                .file200(configurationPropsFile)
-                .classpath100(classpathResourceProperties);
+                .propsPrio400(props)
+                .systemPropertiesPrio300(false)
+                .filePrio200(configurationPropsFile)
+                .classpathPrio100(classpathResourceProperties);
         //---
         final ConfigurationProps configurationProps = instance.build();
     }
@@ -77,10 +77,10 @@ public class ConfigurationPropsBuilderTest {
         //---
         final ConfigurationPropsBuilder instance = new ConfigurationPropsBuilder();
         instance
-                .props400(props)
-                .systemProperties300(loadFromSystemProps)
-                .file200(configurationPropsFile)
-                .classpath100(classpathResourceProperties);
+                .propsPrio400(props)
+                .systemPropertiesPrio300(loadFromSystemProps)
+                .filePrio200(configurationPropsFile)
+                .classpathPrio100(classpathResourceProperties);
         final ConfigurationProps configurationProps = instance.build();
         assertEquals("X", configurationProps.getPropertyOrDefault("propsX", "X"));
 
@@ -125,10 +125,10 @@ public class ConfigurationPropsBuilderTest {
         final ConfigurationPropsBuilder instance = new ConfigurationPropsBuilder();
         instance
                 .prefix("k")
-                .props400(props)
-                .systemProperties300(loadFromSystemProps)
-                .file200(configurationPropsFile)
-                .classpath100(classpathResourceProperties);
+                .propsPrio400(props)
+                .systemPropertiesPrio300(loadFromSystemProps)
+                .filePrio200(configurationPropsFile)
+                .classpathPrio100(classpathResourceProperties);
         final ConfigurationProps configurationProps = instance.build();
         assertEquals("X", configurationProps.getPropertyOrDefault("propsX", "X"));
         assertEquals("X", configurationProps.getPropertyOrDefault("l01-props", "X"));

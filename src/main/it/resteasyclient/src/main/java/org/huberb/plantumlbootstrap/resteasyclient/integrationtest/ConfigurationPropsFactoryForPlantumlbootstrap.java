@@ -38,12 +38,12 @@ class ConfigurationPropsFactoryForPlantumlbootstrap {
     public static final ConfigurationPropsFactoryForPlantumlbootstrap INSTANCE = new ConfigurationPropsFactoryForPlantumlbootstrap();
 
     public static ConfigurationProps create() throws IOException {
-        ConfigurationPropsFactory xx = new ConfigurationPropsFactory(
+        final ConfigurationPropsFactory configurationPropsFactory = new ConfigurationPropsFactory(
                 INSTANCE.prefix,
                 INSTANCE.resourceName,
                 INSTANCE.systemPropertyFile) {
         };
-        return xx.create();
+        return configurationPropsFactory.create();
     }
 
 }

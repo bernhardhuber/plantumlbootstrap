@@ -28,10 +28,10 @@ import java.util.Properties;
 public class ConfigurationPropsBuilder {
 
     private final Properties configurationPropsEmpty = loadProperties(new Properties());
-    private Properties configurationPropsFromProperties = configurationPropsEmpty;
-    private Properties configurationPropsFromSystemProperties = configurationPropsEmpty;
-    private Properties configurationPropsFromFile = configurationPropsEmpty;
-    private Properties configurationPropsFromClasspath = configurationPropsEmpty;
+    private Properties configurationProps400FromProperties = configurationPropsEmpty;
+    private Properties configurationProps300FromSystemProperties = configurationPropsEmpty;
+    private Properties configurationProps200FromFile = configurationPropsEmpty;
+    private Properties configurationProps100FromClasspath = configurationPropsEmpty;
     private String prefix;
 
     public ConfigurationPropsBuilder prefix(String prefix) {
@@ -39,34 +39,34 @@ public class ConfigurationPropsBuilder {
         return this;
     }
 
-    public ConfigurationPropsBuilder props400(Properties props) {
+    public ConfigurationPropsBuilder propsPrio400(Properties props) {
         //---
         if (props != null) {
-            configurationPropsFromProperties = loadProperties(props);
+            configurationProps400FromProperties = loadProperties(props);
         }
         return this;
     }
 
-    public ConfigurationPropsBuilder systemProperties300(boolean systemProperties) {
+    public ConfigurationPropsBuilder systemPropertiesPrio300(boolean systemProperties) {
         //---
         if (systemProperties) {
-            configurationPropsFromSystemProperties = loadProperties(System.getProperties());
+            configurationProps300FromSystemProperties = loadProperties(System.getProperties());
         }
         return this;
     }
 
-    public ConfigurationPropsBuilder file200(File configurationPropsFile) throws IOException {
+    public ConfigurationPropsBuilder filePrio200(File configurationPropsFile) throws IOException {
         //---
         if (configurationPropsFile != null) {
-            configurationPropsFromFile = loadFromFile(configurationPropsFile);
+            configurationProps200FromFile = loadFromFile(configurationPropsFile);
         }
         return this;
     }
 
-    public ConfigurationPropsBuilder classpath100(String classpathResourceProperties) throws IOException {
+    public ConfigurationPropsBuilder classpathPrio100(String classpathResourceProperties) throws IOException {
         //---
         if (classpathResourceProperties != null) {
-            configurationPropsFromClasspath = loadFromClasspath(classpathResourceProperties);
+            configurationProps100FromClasspath = loadFromClasspath(classpathResourceProperties);
         }
         return this;
     }
@@ -74,10 +74,11 @@ public class ConfigurationPropsBuilder {
     public ConfigurationProps build() {
         final ConfigurationProps configurationProps = new ConfigurationProps(this.prefix);
         // flatten by priority
-        configurationPropsFromProperties.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 400 -highest
-        configurationPropsFromSystemProperties.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 300 - high
-        configurationPropsFromFile.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 200 - low
-        configurationPropsFromClasspath.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 100 - lowest
+        // filter by prefix?
+        configurationProps400FromProperties.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 400 -highest
+        configurationProps300FromSystemProperties.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 300 - high
+        configurationProps200FromFile.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 200 - low
+        configurationProps100FromClasspath.forEach((k, v) -> configurationProps.putIfAbsent(k, v)); // 100 - lowest
         return configurationProps;
     }
 

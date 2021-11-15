@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
+ * A factory for creating a {@link ConfigurationProps} instance.
  *
  * @author berni3
  */
@@ -29,12 +30,25 @@ public class ConfigurationPropsFactory {
     final String resourceName;
     final String systemPropertyFile;
 
+    /**
+     * Create using these input sources.
+     *
+     * @param prefix
+     * @param resourceName
+     * @param systemPropertyFile
+     */
     public ConfigurationPropsFactory(String prefix, String resourceName, String systemPropertyFile) {
         this.prefix = prefix;
         this.resourceName = resourceName;
         this.systemPropertyFile = systemPropertyFile;
     }
 
+    /**
+     * Create {@link ConfigurationProps}.
+     *
+     * @return
+     * @throws IOException
+     */
     public ConfigurationProps create() throws IOException {
         final Properties props = new Properties();
         final boolean systemProperties = true;
@@ -49,10 +63,10 @@ public class ConfigurationPropsFactory {
         final ConfigurationPropsBuilder instance = new ConfigurationPropsBuilder();
         instance
                 .prefix(prefix)
-                .props400(props)
-                .systemProperties300(systemProperties)
-                .file200(configurationPropsFile)
-                .classpath100(classpathResourceProperties);
+                .propsPrio400(props)
+                .systemPropertiesPrio300(systemProperties)
+                .filePrio200(configurationPropsFile)
+                .classpathPrio100(classpathResourceProperties);
         final ConfigurationProps configurationProps = instance.build();
         return configurationProps;
     }

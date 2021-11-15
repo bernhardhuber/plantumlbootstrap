@@ -58,14 +58,11 @@ public class GenerateImageResourceIT {
     public GenerateImageResourceIT() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     /**
      * Test method encodeGet of ApplAndPlantumlVersionResource.
      */
     @Test
-    public void testGenerateImgagePngDecoded() throws IOException {
+    public void testGenerateImagePngDecoded() throws IOException {
         final String url = URL_BASE + "/webresources/generateImage/png/decoded";
         final String body = "@startuml\n"
                 + "Alice --> Bob : hello\n"
