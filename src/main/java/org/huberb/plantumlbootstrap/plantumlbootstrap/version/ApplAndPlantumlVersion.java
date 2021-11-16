@@ -24,6 +24,7 @@ import javax.enterprise.context.ApplicationScoped;
 import net.sourceforge.plantuml.version.Version;
 
 /**
+ * Retrieving version information of this application, and plantuml.
  *
  * @author berni3
  */

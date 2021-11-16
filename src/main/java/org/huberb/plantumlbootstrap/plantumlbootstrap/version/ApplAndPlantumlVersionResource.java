@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 /**
+ * Restful service for retrieving version information of this application, and
+ * plantuml.
  *
  * @author berni3
  */
@@ -42,7 +44,7 @@ public class ApplAndPlantumlVersionResource {
     @Path(value = "/applAndPlantumlVersion")
     @Produces(MediaType.TEXT_PLAIN)
     public String applAndPlantumlVersion() {
-       final String result = String.format(
+        final String result = String.format(
                 "Project version: %s\n"
                 + "Plantuml version: %s\n",
                 this.applAndPlantumlVersion.retrieveProjectFullDescription(),
