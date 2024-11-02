@@ -15,7 +15,6 @@
  */
 package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
-import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import net.sourceforge.plantuml.FileFormat;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 
 /**
  * REST Web Service

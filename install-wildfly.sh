@@ -31,7 +31,7 @@ general commands:
   help
 
 wildfly commands:
-  install_wildfly 
+  install_wildfly
   run_wildfly : run wildfly
   status_wildfly : show status of wildfly
   shutdown_wildfly : shutdown running wildfly

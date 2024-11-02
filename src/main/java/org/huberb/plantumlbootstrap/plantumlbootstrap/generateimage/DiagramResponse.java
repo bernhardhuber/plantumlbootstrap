@@ -23,7 +23,6 @@
  */
 package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
@@ -36,10 +35,8 @@ import net.sourceforge.plantuml.ErrorUml;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.NullOutputStream;
-import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.StringUtils;
-import net.sourceforge.plantuml.code.Base64Coder;
 import net.sourceforge.plantuml.core.Diagram;
 import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.core.ImageData;
@@ -70,12 +67,12 @@ class DiagramResponse {
         CONTENT_TYPE = Collections.unmodifiableMap(map);
     }
 
-    static {
-        OptionFlags.ALLOW_INCLUDE = false;
-        if ("true".equalsIgnoreCase(System.getenv("ALLOW_PLANTUML_INCLUDE"))) {
-            OptionFlags.ALLOW_INCLUDE = true;
-        }
-    }
+//    static {
+//        OptionFlags.ALLOW_INCLUDE = false;
+//        if ("true".equalsIgnoreCase(System.getenv("ALLOW_PLANTUML_INCLUDE"))) {
+//            OptionFlags.ALLOW_INCLUDE = true;
+//        }
+//    }
 
     DiagramResponse(HttpServletRequest request, HttpServletResponse response, FileFormat fileFormat) {
         this.response = response;
@@ -96,13 +93,15 @@ class DiagramResponse {
         response.setContentType(getContentType());
         final SourceStringReader reader = new SourceStringReader(plantumlText);
         if (format == FileFormat.BASE64) {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final DiagramDescription result = reader.outputImage(baos, idx, new FileFormatOption(FileFormat.PNG));
-            baos.close();
-            final String encodedBytes = "data:image/png;base64,"
-                    + Base64Coder.encodeLines(baos.toByteArray()).replaceAll("\\s", "");
-            response.getOutputStream().write(encodedBytes.getBytes());
-            return;
+            // net.sourceforge.plantuml.code.Base64Coder; not supported anymore
+            //final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //final DiagramDescription result = reader.outputImage(baos, idx, new FileFormatOption(FileFormat.PNG));
+            //baos.close();
+            //final String encodedBytes = "data:image/png;base64,"
+            //        + Base64Coder.encodeLines(baos.toByteArray()).replaceAll("\\s", "");
+            //response.getOutputStream().write(encodedBytes.getBytes());
+            //return;
+            throw new IllegalArgumentException("FileFormat.BASE64 not supported");
         }
         final BlockUml blockUml = reader.getBlocks().get(0);
         if (notModified(blockUml)) {
