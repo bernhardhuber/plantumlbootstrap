@@ -31,7 +31,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
 
 /**
  * REST Web Service
@@ -50,23 +49,16 @@ public class EncodeDecoderResource {
     @Inject
     private PumlDefaultEncodedDecoded pumlDefaultEncodedDecoded;
 
-    /**
-     * Creates a new instance of GenericResource
-     */
-    public EncodeDecoderResource() {
-    }
-
     @GET
     @Path(value = "/encode")
     @Produces(MediaType.TEXT_PLAIN)
-    public String encodeGet(@QueryParam("text") String text) {
-        final String encoded;
-        if (text == null) {
-            encoded = this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded();
-        } else {
-            encoded = encoderDecoder.encode(text);
-        }
-        return encoded;
+    public Response encodeGet(@QueryParam("text") String text) {
+        final String encoded = (text == null)
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded()
+                : encoderDecoder.encode(text);
+        return Response.status(Status.OK)
+                .entity(encoded)
+                .build();
     }
 
     @POST
@@ -74,34 +66,29 @@ public class EncodeDecoderResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response encodePost(String text) {
-        final String encoded;
-        if (text == null) {
-            encoded = this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded();
-        } else {
-            encoded = encoderDecoder.encode(text);
-        }
-        final Response response = Response
+        final String encoded = (text == null)
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded()
+                : encoderDecoder.encode(text);
+        return Response
                 .status(Status.OK)
                 .entity(new MapBuilder()
                         .keyValue("decoded", text)
                         .keyValue("encoded", encoded)
                         .build())
                 .build();
-        return response;
     }
 
     //-------------------------------------------------------------------------
     @GET
     @Path(value = "/decode")
     @Produces(MediaType.TEXT_PLAIN)
-    public String decodeGet(@QueryParam("text") String text) {
-        final String decoded;
-        if (text == null) {
-            decoded = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
-        } else {
-            decoded = encoderDecoder.decode(text);
-        }
-        return decoded;
+    public Response decodeGet(@QueryParam("text") String text) {
+        final String decoded = (text == null)
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded()
+                : encoderDecoder.decode(text);
+        return Response.status(Status.OK)
+                .entity(decoded)
+                .build();
     }
 
     @POST
@@ -109,27 +96,23 @@ public class EncodeDecoderResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response decodePost(String text) {
-        final String decoded;
-        if (text == null) {
-            decoded = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
-        } else {
-            decoded = encoderDecoder.decode(text);
-        }
-        final Response response = Response
+        final String decoded = (text == null)
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded()
+                : encoderDecoder.decode(text);
+        return Response
                 .status(Status.OK)
                 .entity(new MapBuilder()
                         .keyValue("decoded", decoded)
                         .keyValue("encoded", text)
                         .build())
                 .build();
-        return response;
     }
 
-    static class MapBuilder<String, Object> {
+    static class MapBuilder {
 
         private final Map<String, Object> m = new HashMap<>();
 
-        MapBuilder<String, Object> keyValue(String k, Object v) {
+        MapBuilder keyValue(String k, Object v) {
             m.put(k, v);
             return this;
         }

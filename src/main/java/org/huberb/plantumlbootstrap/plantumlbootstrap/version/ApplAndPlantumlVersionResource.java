@@ -44,12 +44,11 @@ public class ApplAndPlantumlVersionResource {
     @Path(value = "/applAndPlantumlVersion")
     @Produces(MediaType.TEXT_PLAIN)
     public String applAndPlantumlVersion() {
-        final String result = String.format(
+        return String.format(
                 "Project version: %s\n"
                 + "Plantuml version: %s\n",
                 this.applAndPlantumlVersion.retrieveProjectFullDescription(),
                 this.applAndPlantumlVersion.retrievePlantumlFullDescription()
         );
-        return result;
     }
 }

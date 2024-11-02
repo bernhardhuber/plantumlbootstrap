@@ -26,9 +26,4 @@ public class PublicDiagramResponse extends DiagramResponse {
         super.sendDiagram(uml, idx);
     }
 
-    @Override
-    public void sendCheck(String uml) throws IOException {
-        super.sendCheck(uml);
-    }
-
 }

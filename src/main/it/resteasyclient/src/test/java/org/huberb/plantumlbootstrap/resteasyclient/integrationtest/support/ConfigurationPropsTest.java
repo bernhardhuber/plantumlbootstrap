@@ -16,11 +16,12 @@
 package org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support;
 
 import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -70,9 +71,9 @@ public class ConfigurationPropsTest {
     @Test
     public void testGetOrDefault_3args() {
         assertAll(
-                () -> assertEquals("v1", instance.getOrDefault("k1", "X", String.class)),
-                () -> assertEquals("v2", instance.getOrDefault("k2", "X", String.class)),
-                () -> assertEquals("X", instance.getOrDefault("k3", "X", String.class))
+                () -> assertEquals("v1", instance.getOrDefault("k1", "X")),
+                () -> assertEquals("v2", instance.getOrDefault("k2", "X")),
+                () -> assertEquals("X", instance.getOrDefault("k3", "X"))
         );
     }
 

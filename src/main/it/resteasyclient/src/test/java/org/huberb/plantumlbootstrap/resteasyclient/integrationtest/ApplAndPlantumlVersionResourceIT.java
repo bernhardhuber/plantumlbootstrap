@@ -26,11 +26,13 @@ import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.Confi
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -68,15 +70,18 @@ public class ApplAndPlantumlVersionResourceIT {
                 final String m = "" + response;
                 assertEquals(Status.OK.getStatusCode(), response.getStatus(), m);
 
-                //Project version: plantumlbootstrap-1.0-SNAPSHOT
-                //Plantuml version: PlantUML version 1.2021.12 (Tue Oct 05 18:01:58 CEST 2021)
-                assertTrue(
-                        entityRead.contains("Project version:")
-                        && entityRead.contains("Plantuml version:"),
-                        m);
-                final Predicate<String> pred1 = (s) -> s.contains("Project version:")
-                        && s.contains("Plantuml version:");
-                assertTrue(pred1.test(entityRead), m);
+                assertAll(
+                        //Project version: plantumlbootstrap-1.0-SNAPSHOT
+                        //Plantuml version: PlantUML version 1.2021.12 (Tue Oct 05 18:01:58 CEST 2021)
+                        () -> assertTrue(
+                                entityRead.contains("Project version:")
+                                && entityRead.contains("Plantuml version:"),
+                                m),
+                        () -> {
+                            final Predicate<String> pred1 = (s) -> s.contains("Project version:")
+                            && s.contains("Plantuml version:");
+                            assertTrue(pred1.test(entityRead), m);
+                        });
             }
         }
         assertTrue(resteasyClient.isClosed());

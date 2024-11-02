@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#set -x
+set -x
 
 #----------
 # Bash script for 
@@ -12,6 +12,8 @@
 # - add/remove skipdeploy app
 #
 BASEDIR=$(dirname "$0")
+FULL_PATH_TO_SCRIPT="$(realpath "${BASEDIR}")"
+BASEDIR=${FULL_PATH_TO_SCRIPT}
 JBOSS_BASEDIR=${BASEDIR}/target/wildfly/wildfly-25.0.0.Final
 JBOSS_BINDIR=${JBOSS_BASEDIR}/bin
 JBOSS_DEPLOYMENTSDIR=${JBOSS_BASEDIR}/standalone/deployments
@@ -57,15 +59,15 @@ install_wildfly () {
 }
 
 run_wildfly() {
-  ${JBOSS_BINDIR}/standalone.sh --debug -Djboss.socket.binding.port-offset=1
+  "${JBOSS_BINDIR}/standalone.sh" --debug -Djboss.socket.binding.port-offset=1
 }
 
 status_wildfly() {
-  ${JBOSS_BINDIR}/jboss-cli.sh --controller=localhost:9991 --connect --command=":read-attribute(name=server-state)"
+  "${JBOSS_BINDIR}/jboss-cli.sh" --controller=localhost:9991 --connect --command=":read-attribute(name=server-state)"
 }
 
 shutdown_wildfly() {
-  ${JBOSS_BINDIR}/jboss-cli.sh --controller=localhost:9991 --connect --command=":shutdown"
+  "${JBOSS_BINDIR}/jboss-cli.sh" --controller=localhost:9991 --connect --command=":shutdown"
 }
 
 run_jboss_cli() {
@@ -74,12 +76,18 @@ run_jboss_cli() {
 
 #----------
 # deployment commands: 
-create_mklink () {
+create_mklink_cmd () {
   if [ ! -d "${CMD_MKLINK_TARGET}" ]
   then
     cmd << -EOF-
 mklink /J "${CMD_MKLINK_TARGET//\//\\/}" "${CMD_MKLINK_LINK//\//\\/}"
 -EOF-
+  fi
+}
+create_mklink () {
+  if [ ! -d "${CMD_MKLINK_TARGET}" ]
+  then
+    ln -s "${CMD_MKLINK_LINK}" "${CMD_MKLINK_TARGET}"
   fi
 }
 

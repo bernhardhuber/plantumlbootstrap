@@ -28,7 +28,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import net.sourceforge.plantuml.FileFormat;
-import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.StringUtility;
 
 /**
  * REST Web Service
@@ -48,21 +49,19 @@ public class GenerateImageResource {
     @Inject
     private PumlDefaultEncodedDecoded pumlDefaultEncodedDecoded;
 
-    /**
-     * Creates a new instance of GenericResource
-     */
-    public GenerateImageResource() {
-    }
-
     @GET
     @Path(value = "/png/encoded")
     @Produces("image/png")
     public void generateFromEncodedPngImage(
-            @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse,
+            @Context HttpServletRequest httpServletRequest, 
+            @Context HttpServletResponse httpServletResponse,
             @QueryParam("text") String text) {
         final FileFormat fileFormat = FileFormat.PNG;
         final String umlTextEncoded = encodedTextOrDefault(text);
-        generateImage.generateImageFromEncodedAndSend(fileFormat, umlTextEncoded, httpServletRequest, httpServletResponse);
+        generateImage.generateImageFromEncodedAndSend(fileFormat,
+                umlTextEncoded,
+                httpServletRequest,
+                httpServletResponse);
     }
 
     @POST
@@ -70,11 +69,15 @@ public class GenerateImageResource {
     @Consumes(value = "text/plain")
     @Produces("image/png")
     public void generateFromDecodedPngImage(
-            @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse,
+            @Context HttpServletRequest httpServletRequest, 
+            @Context HttpServletResponse httpServletResponse,
             String text) {
         final FileFormat fileFormat = FileFormat.PNG;
         final String umlTextDecoded = decodedTextOrDefault(text);
-        generateImage.generateImgageFromDecodedAndSend(fileFormat, umlTextDecoded, httpServletRequest, httpServletResponse);
+        generateImage.generateImgageFromDecodedAndSend(fileFormat,
+                umlTextDecoded,
+                httpServletRequest,
+                httpServletResponse);
     }
 
     //-------------------------------------------------------------------------
@@ -82,11 +85,15 @@ public class GenerateImageResource {
     @Path(value = "/svg/encoded")
     @Produces("image/svg")
     public void generateFromEncodedSvgImage(
-            @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse,
+            @Context HttpServletRequest httpServletRequest, 
+            @Context HttpServletResponse httpServletResponse,
             @QueryParam("text") String text) {
         final FileFormat fileFormat = FileFormat.SVG;
         final String umlTextEncoded = encodedTextOrDefault(text);
-        generateImage.generateImageFromEncodedAndSend(fileFormat, umlTextEncoded, httpServletRequest, httpServletResponse);
+        generateImage.generateImageFromEncodedAndSend(fileFormat,
+                umlTextEncoded,
+                httpServletRequest,
+                httpServletResponse);
     }
 
     @POST
@@ -103,31 +110,14 @@ public class GenerateImageResource {
 
     //-----------------------------------------------------------------------------
     String encodedTextOrDefault(String text) {
-        final String umlTextEncoded;
-        if (isStringEmpty(text)) {
-            final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded();
-            umlTextEncoded = umlDefault;
-        } else {
-            umlTextEncoded = text;
-        }
-        return umlTextEncoded;
+        return (StringUtility.isStringEmpty(text))
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultEncoded()
+                : text;
     }
 
     String decodedTextOrDefault(String text) {
-        final String umlTextDecoded;
-        if (isStringEmpty(text)) {
-            final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
-            umlTextDecoded = umlDefault;
-        } else {
-            umlTextDecoded = text;
-        }
-        return umlTextDecoded;
-    }
-
-    boolean isStringEmpty(String s) {
-        boolean result = false;
-        result = result || s == null;
-        result = result || s.isEmpty();
-        return result;
+        return (StringUtility.isStringEmpty(text))
+                ? this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded()
+                : text;
     }
 }

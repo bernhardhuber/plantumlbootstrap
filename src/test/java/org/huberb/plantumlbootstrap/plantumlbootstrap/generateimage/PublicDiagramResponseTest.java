@@ -45,9 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 public class PublicDiagramResponseTest {
 
-    public PublicDiagramResponseTest() {
-    }
-
     /**
      * Test of sendDiagram method, of class PublicDiagramResponse.
      */
@@ -110,29 +107,6 @@ public class PublicDiagramResponseTest {
                 //System.out.printf("image props: %s%n", Arrays.toString(bi.getPropertyNames()));
             }
         }
-        Mockito.verify(response, Mockito.times(0)).setStatus(500);
-    }
-
-    /**
-     * Test of sendCheck method, of class PublicDiagramResponse.
-     */
-    @Test
-    public void testSendCheck() throws IOException {
-        final String uml = "@startuml\n"
-                + "Alice --> Bob: hello\n"
-                + "@enduml";
-
-        final FileFormat fileFormat = FileFormat.PNG;
-        final MockHttpServletResponseFactory f = new MockHttpServletResponseFactory();
-        final HttpServletRequest request = f.createHttpServletRequest();
-        final HttpServletResponse response = f.createMockHttpServletResponseWithPrintWriter();
-
-        final PublicDiagramResponse instance = new PublicDiagramResponse(request, response, fileFormat);
-        instance.sendCheck(uml);
-
-        String s = f.getStringWriter().toString();
-        assertEquals("(2 participants)", s);
-
         Mockito.verify(response, Mockito.times(0)).setStatus(500);
     }
 

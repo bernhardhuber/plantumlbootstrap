@@ -59,11 +59,10 @@ public class ConfigurationProps {
         props.put(k, v);
     }
 
-    public Object getOrDefault(Object key, Object defaultValue) {
-        return props.getOrDefault(key, defaultValue);
-    }
-
-    public <T> T getOrDefault(Object key, T defaultValue, Class<T> clazz) {
+//    public Object getOrDefault(Object key, Object defaultValue) {
+//        return props.getOrDefault(key, defaultValue);
+//    }
+    public <T> T getOrDefault(Object key, T defaultValue) {
         return (T) props.getOrDefault(key, defaultValue);
     }
 
@@ -95,10 +94,7 @@ public class ConfigurationProps {
         sb.append(String.format("prefix: %s%n", prefix));
         props.entrySet().stream()
                 .sorted((e1, e2) -> e1.getKey().toString().compareTo(e2.getKey().toString()))
-                .forEach((e) -> {
-                    sb.append(String.format("%s=%s%n", e.getKey(), e.getValue()));
-                }
-                );
+                .forEach(e -> sb.append(String.format("%s=%s%n", e.getKey(), e.getValue())));
         return sb.toString();
     }
 
@@ -111,12 +107,9 @@ public class ConfigurationProps {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("prefix: %s%n", prefix));
         props.entrySet().stream()
-                .filter((e) -> e.getKey().toString().startsWith(prefix))
+                .filter(e -> e.getKey().toString().startsWith(prefix))
                 .sorted((e1, e2) -> e1.getKey().toString().compareTo(e2.getKey().toString()))
-                .forEach((e) -> {
-                    sb.append(String.format("%s=%s%n", e.getKey(), e.getValue()));
-                }
-                );
+                .forEach(e -> sb.append(String.format("%s=%s%n", e.getKey(), e.getValue())));
         return sb.toString();
     }
 }

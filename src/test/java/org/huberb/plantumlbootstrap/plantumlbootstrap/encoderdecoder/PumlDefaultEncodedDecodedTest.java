@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.plantumlbootstrap.plantumlbootstrap.support;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder;
 
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.PumlDefaultEncodedDecoded;
 import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,9 +38,6 @@ public class PumlDefaultEncodedDecodedTest {
 
     @InjectMocks
     PumlDefaultEncodedDecoded instance;
-
-    public PumlDefaultEncodedDecodedTest() {
-    }
 
     @BeforeEach
     public void setUp() {

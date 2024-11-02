@@ -67,8 +67,7 @@ public class ConfigurationPropsFactory {
                 .systemPropertiesPrio300(systemProperties)
                 .filePrio200(configurationPropsFile)
                 .classpathPrio100(classpathResourceProperties);
-        final ConfigurationProps configurationProps = instance.build();
-        return configurationProps;
+        return instance.build();
     }
 
 }
