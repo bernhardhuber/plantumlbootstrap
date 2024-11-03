@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huberb.plantumlbootstrap.plantumlbootstrap.support;
+package org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder;
 
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.PumlDefaultEncodedDecoded;
 import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -36,9 +38,6 @@ public class PumlDefaultEncodedDecodedTest {
 
     @InjectMocks
     PumlDefaultEncodedDecoded instance;
-
-    public PumlDefaultEncodedDecodedTest() {
-    }
 
     @BeforeEach
     public void setUp() {

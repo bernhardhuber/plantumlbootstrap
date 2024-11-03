@@ -31,7 +31,7 @@ import net.sourceforge.plantuml.version.Version;
 @ApplicationScoped
 public class ApplAndPlantumlVersion {
 
-    private static Logger LOGGER = Logger.getLogger(ApplAndPlantumlVersion.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ApplAndPlantumlVersion.class.getName());
 
     /**
      * Retrieve version information about this application.
@@ -63,7 +63,6 @@ public class ApplAndPlantumlVersion {
      * @return
      */
     String retrievePlantumlFullDescription() {
-        final String fullDescription = Version.fullDescription();
-        return fullDescription;
+        return Version.fullDescription();
     }
 }

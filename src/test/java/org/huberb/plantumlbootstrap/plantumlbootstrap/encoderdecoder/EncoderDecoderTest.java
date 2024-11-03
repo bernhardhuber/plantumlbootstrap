@@ -5,9 +5,12 @@
  */
 package org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -45,9 +48,13 @@ public class EncoderDecoderTest {
         assertEquals(stripNewlines(decodedSample), result);
     }
 
-    @Test
-    public void testLoopingEncodeDecode() {
-        final String input = "@start Lorem ipsum @end";
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "@startuml\nclass A\nclass B\nA -> B\n@enduml",
+        "@startuml\ncomponent A\ncomponent B\nA --> B\n@enduml",
+        "@start Lorem ipsum @end"
+    })
+    public void testEncodeDecode(String input) {
         final String unencoded = input;
 
         final String encoded1 = encoderDecoder.encode(unencoded);

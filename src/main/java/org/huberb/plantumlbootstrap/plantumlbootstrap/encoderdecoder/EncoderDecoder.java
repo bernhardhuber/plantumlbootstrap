@@ -36,8 +36,7 @@ public class EncoderDecoder {
      */
     public String encode(String decodedText) {
         try {
-            String encoded = getTranscoder().encode(decodedText);
-            return encoded;
+            return getTranscoder().encode(decodedText);
         } catch (IOException ex) {
             throw new EncodeDecoderException("Failed decodingText: " + decodedText, ex);
         }
@@ -52,8 +51,7 @@ public class EncoderDecoder {
      */
     public String decode(String encodedText) {
         try {
-            String decoded = getTranscoder().decode(encodedText);
-            return decoded;
+            return getTranscoder().decode(encodedText);
         } catch (NoPlantumlCompressionException ex) {
             throw new EncodeDecoderException("Failed decoding: " + encodedText, ex);
         }

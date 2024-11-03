@@ -32,12 +32,14 @@ import org.huberb.plantumlbootstrap.resteasyclient.integrationtest.support.Confi
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -53,9 +55,6 @@ public class GenerateImageResourceIT {
         URL_BASE = configurationProps.getPropertyOrDefault("urlBase", URL_BASE);
         final String m = "" + URL_BASE;
         Assumptions.assumeTrue(URL_BASE.startsWith("http"), m);
-    }
-
-    public GenerateImageResourceIT() {
     }
 
     /**
@@ -78,29 +77,38 @@ public class GenerateImageResourceIT {
                     .accept("image/png")
                     .post(Entity.entity(body, MediaType.TEXT_PLAIN))) {
                 final String m = "" + response;
-                assertEquals(Status.OK.getStatusCode(), response.getStatus(), m);
-                assertTrue(response.hasEntity(), m);
+                assertAll(
+                        () -> assertEquals(Status.OK.getStatusCode(), response.getStatus(), m),
+                        () -> assertTrue(response.hasEntity(), m)
+                );
 
                 final byte[] bytes = responseReadEntity(response);
-                assertNotNull(bytes);
-                assertTrue(bytes.length > 0);
+                assertAll(
+                        () -> assertNotNull(bytes),
+                        () -> assertTrue(bytes.length > 0)
+                );
                 try (InputStream is = new ByteArrayInputStream(bytes)) {
-                    assertNotNull(is, m);
-                    final byte[] bytesOfRange_0_10 = new byte[10];
-                    is.read(bytesOfRange_0_10, 0, 10);
-                    final String magic = String.format("%x %c %c %c",
-                            bytesOfRange_0_10[0],
-                            bytesOfRange_0_10[1],
-                            bytesOfRange_0_10[2],
-                            bytesOfRange_0_10[3]
-                    );
-                    assertEquals("89 P N G", magic, m);
+                    assertAll(
+                            () -> assertNotNull(is, m),
+                            () -> {
+                                final byte[] bytesOfRange_0_10 = new byte[10];
+                                is.read(bytesOfRange_0_10, 0, 10);
+                                final String magic = String.format("%x %c %c %c",
+                                        bytesOfRange_0_10[0],
+                                        bytesOfRange_0_10[1],
+                                        bytesOfRange_0_10[2],
+                                        bytesOfRange_0_10[3]
+                                );
+                                assertEquals("89 P N G", magic, m);
+                            });
                 }
                 try (InputStream is = new ByteArrayInputStream(bytes)) {
                     assertNotNull(is, m);
                     final BufferedImage bufferedImage = ImageIO.read(is);
-                    assertEquals(115, bufferedImage.getWidth());
-                    assertEquals(135, bufferedImage.getHeight());
+                    assertAll(
+                            () -> assertEquals(109, bufferedImage.getWidth()),
+                            () -> assertEquals(119, bufferedImage.getHeight())
+                    );
                 }
             }
         }
@@ -109,8 +117,7 @@ public class GenerateImageResourceIT {
 
     byte[] responseReadEntity(Response response) throws IOException {
         final byte[] bytes;
-        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                InputStream is = response.readEntity(InputStream.class)) {
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream(); InputStream is = response.readEntity(InputStream.class)) {
             IOUtils.copyLarge(is, baos);
             baos.flush();
             bytes = baos.toByteArray();

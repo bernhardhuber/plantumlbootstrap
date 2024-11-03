@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
 import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.EncoderDecoder;
-import org.huberb.plantumlbootstrap.plantumlbootstrap.support.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.encoderdecoder.PumlDefaultEncodedDecoded;
+import org.huberb.plantumlbootstrap.plantumlbootstrap.support.StringUtility;
 
 /**
  * Generate an image from encoded or decoded uml text.
@@ -48,15 +49,9 @@ public class GenerateImage {
 
         //---
         // extract encoded or decoded uml text
-        final String decoded;
-        {
-            if (StringUtility.isStringNotEmpty(decodedUmlText)) {
-                decoded = decodedUmlText;
-            } else {
-                final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
-                decoded = umlDefault;
-            }
-        }
+        final String decoded = (StringUtility.isStringNotEmpty(decodedUmlText))
+                ? decodedUmlText
+                : this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
         // extract and convert file format     
         generateImageAndSend(req, resp, decoded, 0, fileFormat);
     }
@@ -75,15 +70,9 @@ public class GenerateImage {
 
         //---
         // extract encoded or decoded uml text
-        final String decoded;
-        {
-            if (StringUtility.isStringNotEmpty(encodedUmlText)) {
-                decoded = this.encoderDecoder.decode(encodedUmlText);
-            } else {
-                final String umlDefault = this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
-                decoded = umlDefault;
-            }
-        }
+        final String decoded = (StringUtility.isStringNotEmpty(encodedUmlText))
+                ? this.encoderDecoder.decode(encodedUmlText)
+                : this.pumlDefaultEncodedDecoded.retrievePumlDefaultDecoded();
         // extract and convert file format     
         generateImageAndSend(req, resp, decoded, 0, fileFormat);
     }
@@ -107,20 +96,6 @@ public class GenerateImage {
             diagramResponse.sendDiagram(decodedUmlText, idx);
         } catch (IOException ioex) {
             throw new GenerateImageRuntimeException("generateAndSendImage", ioex);
-        }
-    }
-
-    public static class StringUtility {
-
-        public static boolean isStringNotEmpty(String s) {
-            return !isStringEmpty(s);
-        }
-
-        public static boolean isStringEmpty(String s) {
-            boolean result = false;
-            result = result || s == null;
-            result = result || s.isEmpty();
-            return result;
         }
     }
 

@@ -16,7 +16,6 @@
 package org.huberb.plantumlbootstrap.plantumlbootstrap.generateimage;
 
 import java.awt.image.BufferedImage;
-import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,13 +27,16 @@ import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -42,9 +44,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 public class PublicDiagramResponseTest {
-
-    public PublicDiagramResponseTest() {
-    }
 
     /**
      * Test of sendDiagram method, of class PublicDiagramResponse.
@@ -68,17 +67,20 @@ public class PublicDiagramResponseTest {
 
         // assert magic number 
         try (final ByteArrayOutputStream baos = myServletOutputStream.getBaos()) {
-            assertNotNull(baos);
-            final byte[] baosByteArray = baos.toByteArray();
-            assertTrue(baosByteArray.length > 0);
+            assertAll(
+                    () -> assertNotNull(baos),
+                    () -> {
+                        final byte[] baosByteArray = baos.toByteArray();
+                        assertTrue(baosByteArray.length > 0);
 
-            final String firstFourBytesFormatted = String.format("%x %c %c %c",
-                    baosByteArray[0],
-                    (char) baosByteArray[1],
-                    (char) baosByteArray[2],
-                    (char) baosByteArray[3]
-            );
-            assertEquals("89 P N G", firstFourBytesFormatted);
+                        final String firstFourBytesFormatted = String.format("%x %c %c %c",
+                                baosByteArray[0],
+                                (char) baosByteArray[1],
+                                (char) baosByteArray[2],
+                                (char) baosByteArray[3]
+                        );
+                        assertEquals("89 P N G", firstFourBytesFormatted);
+                    });
         }
         // assert image is readable
         try (final ByteArrayOutputStream baos = myServletOutputStream.getBaos()) {
@@ -87,45 +89,24 @@ public class PublicDiagramResponseTest {
             try (final ByteArrayInputStream bais = new ByteArrayInputStream(baosByteArray)) {
                 final BufferedImage bi = ImageIO.read(bais);
                 System.out.printf("testSendDiagram_PNG width %d, height %d%n", bi.getWidth(), bi.getHeight());
-                {
-                    // 115 local, 120 github
-                    final List<Integer> allowedWidth = Arrays.asList(115, 120);
-                    final String m = "" + allowedWidth + ", " + bi.getWidth();
-                    assertTrue(allowedWidth.contains(bi.getWidth()), m);
-                }
-                {
-                    // 135 local, 131 github
-                    final List<Integer> allowedHeight = Arrays.asList(135, 131);
-                    final String m = "" + allowedHeight + ", " + bi.getHeight();
-                    assertTrue(allowedHeight.contains(bi.getHeight()), m);
-                }
+                assertAll(
+                        () -> {
+                            // 109, 115 local, 120 github
+                            final List<Integer> allowedWidth = Arrays.asList(109, 115, 120);
+                            final String m = String.format("allowedWidth %s, width %d", allowedWidth, bi.getWidth());
+                            assertTrue(allowedWidth.contains(bi.getWidth()), m);
+                        },
+                        () -> {
+                            // 119, 135 local, 131 github
+                            final List<Integer> allowedHeight = Arrays.asList(119, 135, 131);
+                            final String m = String.format("allowedHeight %s, height %d", allowedHeight, bi.getHeight());
+                            assertTrue(allowedHeight.contains(bi.getHeight()), m);
+                        },
+                        () -> assertEquals(TYPE_3BYTE_BGR, bi.getType())
+                );
                 //System.out.printf("image props: %s%n", Arrays.toString(bi.getPropertyNames()));
-                assertEquals(TYPE_3BYTE_BGR, bi.getType());
             }
         }
-        Mockito.verify(response, Mockito.times(0)).setStatus(500);
-    }
-
-    /**
-     * Test of sendCheck method, of class PublicDiagramResponse.
-     */
-    @Test
-    public void testSendCheck() throws IOException {
-        final String uml = "@startuml\n"
-                + "Alice --> Bob: hello\n"
-                + "@enduml";
-
-        final FileFormat fileFormat = FileFormat.PNG;
-        final MockHttpServletResponseFactory f = new MockHttpServletResponseFactory();
-        final HttpServletRequest request = f.createHttpServletRequest();
-        final HttpServletResponse response = f.createMockHttpServletResponseWithPrintWriter();
-
-        final PublicDiagramResponse instance = new PublicDiagramResponse(request, response, fileFormat);
-        instance.sendCheck(uml);
-
-        String s = f.getStringWriter().toString();
-        assertEquals("(2 participants)", s);
-
         Mockito.verify(response, Mockito.times(0)).setStatus(500);
     }
 

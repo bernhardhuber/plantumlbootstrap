@@ -95,8 +95,7 @@ public class ConfigurationPropsBuilder {
 
     Properties loadFromFile(File propsFile) throws IOException {
         final Properties props = new Properties();
-        boolean guard = true;
-        guard = guard && propsFile != null;
+        boolean guard =  propsFile != null;
         guard = guard && propsFile.exists();
         guard = guard && propsFile.isFile();
         guard = guard && propsFile.canRead();
